@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:national_calendar_hub_app/models/national_day.dart';
+import 'package:national_calendar_hub_app/pages/details/detail_screen_arguments.dart';
+import 'package:national_calendar_hub_app/pages/details/details.dart';
 import 'package:national_calendar_hub_app/utils/icons.dart';
 import 'package:national_calendar_hub_app/widgets/svg_asset.dart';
 
@@ -97,7 +99,16 @@ class DayHomeListItem extends StatelessWidget with HomeListItem {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-        onTap: () {},
+        onTap: () {
+          Navigator.pushNamed(
+            context,
+            DetailsPage.routeName,
+            arguments: DetailScreenArguments(
+              id,
+              "home",
+            ),
+          );
+        },
         child: Container(
             margin: const EdgeInsets.only(
                 left: 16.0, right: 16.0, top: 10.0, bottom: 18.0),
