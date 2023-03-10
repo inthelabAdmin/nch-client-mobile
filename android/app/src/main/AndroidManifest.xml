@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.nationalcalendarhub.mobile.national_calendar_hub_app">
    <application
-        android:label="national_calendar_hub_app"
+        android:label="National Calendar Hub"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
