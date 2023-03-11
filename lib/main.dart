@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:national_calendar_hub_app/pages/main_navigation_page.dart';
-import 'package:national_calendar_hub_app/pages/search_page.dart';
 import 'color_schemes.g.dart';
 import 'pages/details/details.dart';
 
@@ -20,7 +19,6 @@ class MyApp extends StatelessWidget {
         builder: (BuildContext context, child) => MaterialApp(
               routes: {
                 DetailsPage.routeName: (context) => const DetailsPage(),
-                SearchPage.routeName: (context) => const SearchPage()
               },
               debugShowCheckedModeBanner: false,
               title: 'National Calendar Hub',
@@ -28,6 +26,11 @@ class MyApp extends StatelessWidget {
                 useMaterial3: true,
                 colorScheme: lightColorScheme,
                 fontFamily: 'Urbanist',
+                textTheme: TextTheme(
+                    bodyMedium: TextStyle(
+                      color: lightColorScheme.primary
+                    )
+                )
               ),
               darkTheme: ThemeData(
                 useMaterial3: true,
