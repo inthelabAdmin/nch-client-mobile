@@ -40,7 +40,7 @@ class HomePageResponseConverter {
         .toList();
 
     List<HomeListItem> homePageList = [];
-    homePageList.add(HeadingIconItem("Today", AssetName.search));
+    homePageList.add(HeadingItem("Today"));
     homePageList.addAll(dayItems);
     homePageList.add(HeadingItem("This Month"));
     homePageList.addAll(monthItems);

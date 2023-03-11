@@ -3,57 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:national_calendar_hub_app/models/national_day.dart';
 import 'package:national_calendar_hub_app/pages/details/detail_screen_arguments.dart';
 import 'package:national_calendar_hub_app/pages/details/details.dart';
-import 'package:national_calendar_hub_app/pages/search_page.dart';
-import 'package:national_calendar_hub_app/utils/icons.dart';
-import 'package:national_calendar_hub_app/widgets/svg_asset.dart';
 
 abstract class HomeListItem {
   Widget build(BuildContext context);
-}
-
-class HeadingIconItem extends HomeListItem {
-  final AssetName assetName;
-  final String heading;
-
-  HeadingIconItem(this.heading, this.assetName);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        left: 16.w,
-        right: 18.w,
-        top: 36.h,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(heading,
-              style: TextStyle(fontSize: 34.w, fontWeight: FontWeight.bold)),
-          InkWell(
-            borderRadius: BorderRadius.circular(360),
-            onTap: () {
-              Navigator.pushNamed(
-                context,
-                SearchPage.routeName,
-              );
-            },
-            child: SizedBox(
-              height: 35.w,
-              width: 35.w,
-              child: Center(
-                child: SvgAsset(
-                  assetName: assetName,
-                  height: 24.w,
-                  width: 24.w,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }
 
 class HeadingItem extends HomeListItem {

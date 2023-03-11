@@ -10,6 +10,7 @@ import 'dart:convert';
 import '../../utils/network_utils.dart';
 import 'package:http/http.dart' as http;
 import 'package:share_plus/share_plus.dart';
+import 'package:add_2_calendar/add_2_calendar.dart';
 
 class DetailsPage extends StatefulWidget {
   const DetailsPage({Key? key}) : super(key: key);
@@ -31,6 +32,16 @@ class _DetailsPageState extends State<DetailsPage> {
     super.initState();
   }
 
+  void addToCalendar() {
+    final Event event = Event(
+        title: _data.name,
+        description: "Added from National Calendar Hub app",
+        startDate: dateTimeUtil.getCalendarStartDateTime(_data.date),
+        endDate: dateTimeUtil.getCalendarEndDateTime(_data.date),
+        allDay: true);
+    Add2Calendar.addEvent2Cal(event);
+  }
+
   Future<void> _fetchData(String id) async {
     setState(() {
       _isLoading = true;
@@ -46,7 +57,7 @@ class _DetailsPageState extends State<DetailsPage> {
         _data = responseData;
       });
     } catch (e) {
-      // TO DO ERROR HANDLING
+      // TODO ERROR HANDLING
       print('Error fetching remote data: $e');
     }
 
@@ -76,23 +87,31 @@ class _DetailsPageState extends State<DetailsPage> {
     } else {
       return Scaffold(
           appBar: AppBar(actions: <Widget>[
-            InkWell(
-              borderRadius: BorderRadius.circular(360),
-              onTap: () {
-                onShare(context, _data.shareUrl);
-              },
-              child: SizedBox(
-                height: 35.w,
-                width: 35.w,
-                child: Center(
-                  child: SvgAsset(
-                    assetName: AssetName.share,
-                    height: 24.w,
-                    width: 24.w,
+            IconButton(
+                onPressed: () {
+                  addToCalendar();
+                },
+                icon: const Icon(Icons.calendar_today)),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 16, 0),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(360),
+                onTap: () {
+                  onShare(context, _data.shareUrl);
+                },
+                child: SizedBox(
+                  height: 35.w,
+                  width: 35.w,
+                  child: Center(
+                    child: SvgAsset(
+                      assetName: AssetName.share,
+                      height: 24.w,
+                      width: 24.w,
+                    ),
                   ),
                 ),
               ),
-            ),
+            )
           ]),
           body: CustomScrollView(
             slivers: [

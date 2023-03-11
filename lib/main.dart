@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:national_calendar_hub_app/pages/main_navigation_page.dart';
 import 'package:national_calendar_hub_app/pages/search_page.dart';
 import 'color_schemes.g.dart';
 import 'pages/details/details.dart';
-import 'pages/home_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
                 colorScheme: darkColorScheme,
                 fontFamily: 'Urbanist',
               ),
-              home: const HomePage(),
+              home: const MainNavigationPage(),
             ));
   }
 }

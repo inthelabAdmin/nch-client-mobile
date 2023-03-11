@@ -18,4 +18,8 @@ class NetworkUtils {
   String getSearchUrl(String keyword) {
     return "$_baseUrl/search?keyword=$keyword";
   }
+
+  String getFetchDaysUrl(String date) {
+    return "$_baseUrl/days?date=$date";
+  }
 }
