@@ -180,7 +180,7 @@ class _SearchPageState extends State<SearchPage> with RestorationMixin {
         body: _isLoading
             ? const Center(child: CircularProgressIndicator())
             : _showNotFoundMessage
-                ?  EmptyState(headerTitle:searchMessage)
+                ? EmptyState(headerTitle: searchMessage)
                 : ListView.builder(
                     physics: const BouncingScrollPhysics(),
                     itemCount: _data.length,
@@ -232,12 +232,13 @@ class _SearchPageState extends State<SearchPage> with RestorationMixin {
     return DialogRoute<DateTime>(
       context: context,
       builder: (BuildContext context) {
+        final thisYear = DateTime.now().year;
         return DatePickerDialog(
           restorationId: 'date_picker_dialog',
           initialEntryMode: DatePickerEntryMode.calendarOnly,
           initialDate: DateTime.fromMillisecondsSinceEpoch(arguments! as int),
-          firstDate: DateTime.parse("2023-01-01"),
-          lastDate: DateTime.parse("2023-12-31"),
+          firstDate: DateTime.parse("$thisYear-01-01"),
+          lastDate: DateTime.parse("$thisYear-12-31"),
         );
       },
     );

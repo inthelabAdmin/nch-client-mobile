@@ -22,4 +22,8 @@ class NetworkUtils {
   String getFetchDaysUrl(String date) {
     return "$_baseUrl/days?date=$date";
   }
+
+  String getArticlesUrl(int page) {
+    return "$_baseUrl/articles?page=$page";
+  }
 }
