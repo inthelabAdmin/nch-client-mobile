@@ -11,8 +11,11 @@ class NetworkUtils {
     return "$_baseUrl/homePage?date=$today";
   }
 
-  String getDetailsUrl(String id){
+  String getDetailsUrl(String id) {
     return "$_baseUrl/details?id=$id";
   }
 
+  String getSearchUrl(String keyword) {
+    return "$_baseUrl/search?keyword=$keyword";
+  }
 }

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:national_calendar_hub_app/models/national_day.dart';
 import 'package:national_calendar_hub_app/pages/details/detail_screen_arguments.dart';
 import 'package:national_calendar_hub_app/pages/details/details.dart';
+import 'package:national_calendar_hub_app/pages/search_page.dart';
 import 'package:national_calendar_hub_app/utils/icons.dart';
 import 'package:national_calendar_hub_app/widgets/svg_asset.dart';
 
@@ -31,7 +32,12 @@ class HeadingIconItem extends HomeListItem {
               style: TextStyle(fontSize: 34.w, fontWeight: FontWeight.bold)),
           InkWell(
             borderRadius: BorderRadius.circular(360),
-            onTap: () {},
+            onTap: () {
+              Navigator.pushNamed(
+                context,
+                SearchPage.routeName,
+              );
+            },
             child: SizedBox(
               height: 35.w,
               width: 35.w,

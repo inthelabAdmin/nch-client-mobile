@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
             .toListOfHomeListItem(responseData);
       });
     } catch (e) {
-      // TO DO ERROR HANDLING
+      // TODO ERROR HANDLING
       print('Error fetching remote data: $e');
     }
 
@@ -48,6 +48,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    // TODO better loading
     return _isLoading
         ? const Center(child: CircularProgressIndicator())
         : Scaffold(
