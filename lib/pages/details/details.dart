@@ -1,10 +1,10 @@
-import 'package:add_2_calendar/add_2_calendar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:national_calendar_hub_app/models/detail_day_item.dart';
 import 'package:national_calendar_hub_app/network/details_repository.dart';
 import 'package:national_calendar_hub_app/pages/details/hashtag_dialog.dart';
+import 'package:national_calendar_hub_app/utils/add_event_helper.dart';
 import 'package:national_calendar_hub_app/utils/datetime_utils.dart';
 import 'package:national_calendar_hub_app/widgets/error_state.dart';
 import 'package:share_plus/share_plus.dart';
@@ -44,6 +44,7 @@ class _DetailsPageState extends State<DetailsPage> {
   late DetailDayItem _data;
   DateTimeUtil dateTimeUtil = const DateTimeUtil();
   final DetailsRepository detailsRepository = DetailsRepository();
+  AddEventHelper addEventHelper = AddEventHelper();
   DetailPageState currentStata = DetailPageState.loading;
 
   @override
@@ -52,17 +53,7 @@ class _DetailsPageState extends State<DetailsPage> {
     _fetchData(widget.id);
   }
 
-  void addToCalendar() {
-    final Event event = Event(
-        title: _data.name,
-        description: "Added from National Calendar Hub app",
-        startDate: dateTimeUtil.getCalendarStartDateTime(_data.date),
-        endDate: dateTimeUtil.getCalendarEndDateTime(_data.date),
-        allDay: true);
-    Add2Calendar.addEvent2Cal(event);
-  }
-
-  void setCurrentPageState(DetailPageState state){
+  void setCurrentPageState(DetailPageState state) {
     setState(() {
       currentStata = state;
     });
@@ -106,7 +97,8 @@ class _DetailsPageState extends State<DetailsPage> {
                     actions: <Widget>[
                       IconButton(
                           onPressed: () {
-                            addToCalendar();
+                            addEventHelper.addToCalendar(
+                                _data.name, _data.date);
                           },
                           icon: const Icon(Icons.calendar_today)),
                       Padding(
@@ -191,8 +183,5 @@ class _DetailsPageState extends State<DetailsPage> {
                 ));
   }
 }
-enum DetailPageState{
-  loading,
-  success,
-  error
-}
+
+enum DetailPageState { loading, success, error }
