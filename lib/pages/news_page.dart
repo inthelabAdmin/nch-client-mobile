@@ -17,10 +17,9 @@ class _NewsPageState extends State<NewsPage> {
   final controller = ScrollController();
   NetworkUtils networkUtils = const NetworkUtils();
   final List<dynamic> _items = [];
-  bool _isLoading = false;
+  NewsPageState currentPageState = NewsPageState.initial;
   bool _hasNext = true;
   int _page = 1;
-  bool showError = false;
 
   @override
   void initState() {
@@ -39,12 +38,16 @@ class _NewsPageState extends State<NewsPage> {
     super.dispose();
   }
 
-  Future<void> _loadData() async {
-    if (_isLoading) return;
-
+  void updatePageState(NewsPageState state) {
     setState(() {
-      _isLoading = true;
+      currentPageState = state;
     });
+  }
+
+  Future<void> _loadData() async {
+    if (currentPageState == NewsPageState.loading) return;
+
+    updatePageState(NewsPageState.loading);
 
     try {
       final response =
@@ -53,27 +56,17 @@ class _NewsPageState extends State<NewsPage> {
 
       if (response.statusCode == 200 && responseData["success"]) {
         setState(() {
-          _isLoading = false;
+          currentPageState = NewsPageState.success;
           _page += 1;
           _hasNext = responseData['hasNext'];
           _items.addAll(responseData['result']);
         });
       } else if (_items.isEmpty) {
-        setShowError();
+        updatePageState(NewsPageState.error);
       }
     } catch (e) {
-      setShowError();
+      updatePageState(NewsPageState.error);
     }
-
-    setState(() {
-      _isLoading = false;
-    });
-  }
-
-  void setShowError() {
-    setState(() {
-      showError = true;
-    });
   }
 
   _launchURL(String url) async {
@@ -87,7 +80,7 @@ class _NewsPageState extends State<NewsPage> {
 
   Widget _buildListItem(BuildContext context, int index) {
     if (index == _items.length) {
-      return _isLoading
+      return currentPageState == NewsPageState.loading
           ? const Center(
               child: CircularProgressIndicator(),
             )
@@ -141,7 +134,7 @@ class _NewsPageState extends State<NewsPage> {
           ),
         ),
         body: SafeArea(
-            child: showError
+            child: currentPageState == NewsPageState.error
                 ? const Center(child: ErrorState())
                 : ListView.builder(
                     controller: controller,
@@ -152,3 +145,5 @@ class _NewsPageState extends State<NewsPage> {
                   )));
   }
 }
+
+enum NewsPageState {initial, loading, success, error }

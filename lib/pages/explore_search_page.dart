@@ -121,7 +121,6 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
   }
 
   /// Fetch calls **********/
-
   Future<void> _fetchDataForDate(String date) async {
     setCurrentPageState(ExplorePageState.loading);
 
