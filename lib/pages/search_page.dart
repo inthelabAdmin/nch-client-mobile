@@ -9,6 +9,7 @@ import 'package:national_calendar_hub_app/utils/datetime_utils.dart';
 import 'package:national_calendar_hub_app/utils/network_utils.dart';
 import 'package:national_calendar_hub_app/widgets/empty_state.dart';
 import 'package:national_calendar_hub_app/widgets/error_state.dart';
+import 'package:national_calendar_hub_app/widgets/search_initial_screen.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -25,136 +26,28 @@ class _SearchPageState extends State<SearchPage> with RestorationMixin {
   NetworkUtils networkUtils = const NetworkUtils();
   DateTimeUtil dateTimeUtil = const DateTimeUtil();
   final fieldText = TextEditingController();
-  bool _isLoading = false;
+  ExplorePageState currentState = ExplorePageState.initial;
   bool _hasValue = false;
-  bool _showNotFoundMessage = false;
-  bool _disableTextField = false;
   String _displayDate = "";
   String searchMessage = "";
-  bool showError = false;
 
   @override
   void initState() {
     super.initState();
   }
 
-  Future<void> _fetchDataForDate(String date) async {
-    setState(() {
-      _isLoading = true;
-      showError = false;
-    });
-
-    try {
-      final response =
-          await http.get(Uri.parse(networkUtils.getFetchDaysUrl(date)));
-      final jsonData = jsonDecode(response.body);
-
-      if (response.statusCode == 200 && jsonData["success"]) {
-        final searchResults = jsonData['result'] as List;
-        final resultItems = searchResults
-            .map((e) => SearchItem(e["id"], e["name"], e["imageUrl"]))
-            .toList();
-
-        setState(() {
-          _data = resultItems;
-        });
-      } else {
-        setShowError();
-      }
-    } catch (e) {
-      setShowError();
-    }
-
-    setState(() {
-      _isLoading = false;
-    });
-  }
-
-  Future<void> _fetchDataForSearch(String keyword) async {
-    setState(() {
-      _isLoading = true;
-      showError = false;
-    });
-
-    try {
-      final response =
-          await http.get(Uri.parse(networkUtils.getSearchUrl(keyword)));
-      final jsonData = jsonDecode(response.body);
-
-      if (response.statusCode == 200 && jsonData["success"]) {
-        final responseData = SearchResponse.fromJson(jsonData);
-
-        setState(() {
-          _data = responseData.items;
-          if (responseData.items.isEmpty) {
-            _showNotFoundMessage = true;
-            searchMessage = responseData.message;
-          } else {
-            _showNotFoundMessage = false;
-            searchMessage = "";
-          }
-        });
-      } else {
-        setShowError();
-      }
-    } catch (e) {
-      setShowError();
-    }
-
-    setState(() {
-      _isLoading = false;
-    });
-  }
-
-  void setShowError() {
-    setState(() {
-      showError = true;
-    });
-  }
-
-  void onCalendarButtonClick() {
-    _restorableDatePickerRouteFuture.present();
-  }
-
-  void onTextChange(String s) {
-    _hasValue = s.isNotEmpty;
-    if (s.length > 1) {
-      _fetchDataForSearch(s);
-    }
-  }
-
-  void onClearTextField() {
-    fieldText.clear();
-    setState(() {
-      _showNotFoundMessage = false;
-      showError = false;
-      _hasValue = false;
-      _data = [];
-    });
-  }
-
-  void onClearDate() {
-    setState(() {
-      _displayDate = "";
-      _disableTextField = false;
-      showError = false;
-      _data = [];
-    });
-  }
-
-  // TODO Initial Page And Results not found
-
   @override
   Widget build(BuildContext context) {
     final ColorScheme colors = Theme.of(context).colorScheme;
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: colors.background,
           title: SizedBox(
             width: double.infinity,
             height: 40,
             child: Center(
               child: TextField(
-                enabled: !_disableTextField,
+                enabled: currentState != ExplorePageState.calendarMode,
                 onChanged: onTextChange,
                 textInputAction: TextInputAction.search,
                 controller: fieldText,
@@ -177,7 +70,7 @@ class _SearchPageState extends State<SearchPage> with RestorationMixin {
           actions: [
             Padding(
                 padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
-                child: _disableTextField
+                child: currentState == ExplorePageState.calendarMode
                     ? InputChip(
                         label: Text(_displayDate),
                         onDeleted: onClearDate,
@@ -194,39 +87,139 @@ class _SearchPageState extends State<SearchPage> with RestorationMixin {
                         side: BorderSide(color: colors.outline))))
           ],
         ),
-        body: _isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : showError
-                ? const Center(child: ErrorState())
-                : _showNotFoundMessage
-                    ? EmptyState(headerTitle: searchMessage)
-                    : ListView.builder(
-                        physics: const BouncingScrollPhysics(),
-                        itemCount: _data.length,
-                        itemBuilder: (context, index) {
-                          final currentItem = _data[index];
-                          return ListTile(
-                            leading: ClipRRect(
-                                borderRadius: BorderRadius.circular(35.0),
-                                child: CachedNetworkImage(
-                                  imageUrl: "${currentItem.imageUrl}?width=100",
-                                  width: 50,
-                                  height: 50,
-                                  fit: BoxFit.cover,
-                                  placeholder: (context, url) =>
-                                      Container(color: Colors.grey),
-                                  errorWidget: (context, url, error) =>
-                                      Container(color: Colors.grey),
-                                )),
-                            title: Text(currentItem.name),
-                            onTap: () {
-                              Navigator.of(context).push(
-                                  DetailsPage.createRoute(currentItem.id));
-                            },
-                          );
-                        }));
+        body: currentState == ExplorePageState.initial
+            ? const Center(child: SearchInitialPage())
+            : currentState == ExplorePageState.loading
+                ? const Center(child: CircularProgressIndicator())
+                : currentState == ExplorePageState.error
+                    ? const Center(child: ErrorState())
+                    : currentState == ExplorePageState.empty
+                        ? EmptyState(headerTitle: searchMessage)
+                        : ListView.builder(
+                            physics: const BouncingScrollPhysics(),
+                            itemCount: _data.length,
+                            itemBuilder: (context, index) {
+                              final currentItem = _data[index];
+                              return ListTile(
+                                leading: ClipRRect(
+                                    borderRadius: BorderRadius.circular(35.0),
+                                    child: CachedNetworkImage(
+                                      imageUrl:
+                                          "${currentItem.imageUrl}?width=100",
+                                      width: 50,
+                                      height: 50,
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) =>
+                                          Container(color: Colors.grey),
+                                      errorWidget: (context, url, error) =>
+                                          Container(color: Colors.grey),
+                                    )),
+                                title: Text(currentItem.name),
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                      DetailsPage.createRoute(currentItem.id));
+                                },
+                              );
+                            }));
   }
 
+  /// Fetch calls **********/
+
+  Future<void> _fetchDataForDate(String date) async {
+    setCurrentPageState(ExplorePageState.loading);
+
+    try {
+      final response =
+          await http.get(Uri.parse(networkUtils.getFetchDaysUrl(date)));
+      final jsonData = jsonDecode(response.body);
+
+      if (response.statusCode == 200 && jsonData["success"]) {
+        final searchResults = jsonData['result'] as List;
+        final resultItems = searchResults
+            .map((e) => SearchItem(e["id"], e["name"], e["imageUrl"]))
+            .toList();
+
+        setState(() {
+          _data = resultItems;
+        });
+      } else {
+        setCurrentPageState(ExplorePageState.error);
+      }
+    } catch (e) {
+      setCurrentPageState(ExplorePageState.error);
+    }
+
+    setCurrentPageState(ExplorePageState.calendarMode);
+  }
+
+  Future<void> _fetchDataForSearch(String keyword) async {
+    setCurrentPageState(ExplorePageState.loading);
+
+    try {
+      final response =
+          await http.get(Uri.parse(networkUtils.getSearchUrl(keyword)));
+      final jsonData = jsonDecode(response.body);
+
+      if (response.statusCode == 200 && jsonData["success"]) {
+        final responseData = SearchResponse.fromJson(jsonData);
+
+        setState(() {
+          _data = responseData.items;
+          if (responseData.items.isEmpty) {
+            currentState = ExplorePageState.empty;
+          }
+          searchMessage = responseData.message;
+        });
+      } else {
+        setCurrentPageState(ExplorePageState.error);
+      }
+    } catch (e) {
+      setCurrentPageState(ExplorePageState.error);
+    }
+
+    setCurrentPageState(ExplorePageState.searchMode);
+  }
+
+  /// Helper functions **********/
+  void setCurrentPageState(ExplorePageState state) {
+    setState(() {
+      currentState = state;
+    });
+  }
+
+  void onCalendarButtonClick() {
+    _restorableDatePickerRouteFuture.present();
+  }
+
+  void onTextChange(String s) {
+    _hasValue = s.isNotEmpty;
+    if (s.length > 1) {
+      _fetchDataForSearch(s);
+    } else if (s.isEmpty) {
+      setState(() {
+        currentState = ExplorePageState.initial;
+      });
+    }
+  }
+
+  void onClearTextField() {
+    fieldText.clear();
+    setState(() {
+      currentState = ExplorePageState.initial;
+      _hasValue = false;
+      _data = [];
+    });
+  }
+
+  void onClearDate() {
+    setState(() {
+      _displayDate = "";
+      currentState = ExplorePageState.initial;
+      _data = [];
+    });
+  }
+
+  /// DatePicker functions **********/
   @override
   String? get restorationId => widget.restorationId;
 
@@ -265,7 +258,6 @@ class _SearchPageState extends State<SearchPage> with RestorationMixin {
     if (newSelectedDate != null) {
       onClearTextField();
       setState(() {
-        _disableTextField = true;
         _displayDate = dateTimeUtil.formatDisplayDateFromDate(newSelectedDate);
         _selectedDate.value = newSelectedDate;
       });
@@ -279,4 +271,13 @@ class _SearchPageState extends State<SearchPage> with RestorationMixin {
     registerForRestoration(
         _restorableDatePickerRouteFuture, 'date_picker_route_future');
   }
+}
+
+enum ExplorePageState {
+  initial,
+  loading,
+  searchMode,
+  calendarMode,
+  empty,
+  error
 }

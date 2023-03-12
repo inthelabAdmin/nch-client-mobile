@@ -134,6 +134,7 @@ class _NewsPageState extends State<NewsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.background,
           title: const Text(
             "News",
             style: TextStyle(fontWeight: FontWeight.w600),

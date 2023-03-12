@@ -71,6 +71,7 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.background,
           title: const Text("Theme"),
         ),
         body: SafeArea(
