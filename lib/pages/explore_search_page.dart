@@ -1,34 +1,31 @@
-import 'dart:convert';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:national_calendar_hub_app/models/response/search_response.dart';
+import 'package:national_calendar_hub_app/network/search_repository.dart';
 import 'package:national_calendar_hub_app/pages/details/details.dart';
 import 'package:national_calendar_hub_app/utils/datetime_utils.dart';
-import 'package:national_calendar_hub_app/utils/network_utils.dart';
 import 'package:national_calendar_hub_app/widgets/empty_state.dart';
 import 'package:national_calendar_hub_app/widgets/error_state.dart';
 import 'package:national_calendar_hub_app/widgets/search_initial_screen.dart';
 
-class SearchPage extends StatefulWidget {
-  const SearchPage({Key? key}) : super(key: key);
+class ExploreSearchPage extends StatefulWidget {
+  const ExploreSearchPage({Key? key}) : super(key: key);
 
   final String restorationId = "explore";
-  static const routeName = '/search';
 
   @override
-  State<SearchPage> createState() => _SearchPageState();
+  State<ExploreSearchPage> createState() => _ExploreSearchPageState();
 }
 
-class _SearchPageState extends State<SearchPage> with RestorationMixin {
-  List<SearchItem> _data = [];
-  NetworkUtils networkUtils = const NetworkUtils();
+class _ExploreSearchPageState extends State<ExploreSearchPage>
+    with RestorationMixin {
+  List<ExploreSearchItem> _data = [];
   DateTimeUtil dateTimeUtil = const DateTimeUtil();
+  ExploreSearchRepository exploreSearchRepository = ExploreSearchRepository();
   final fieldText = TextEditingController();
   ExplorePageState currentState = ExplorePageState.initial;
-  bool _hasValue = false;
-  String _displayDate = "";
+  bool hasTextFieldValue = false;
+  String displayDate = "";
   String searchMessage = "";
 
   @override
@@ -55,7 +52,7 @@ class _SearchPageState extends State<SearchPage> with RestorationMixin {
                     contentPadding: const EdgeInsets.only(
                         left: 5.0, right: 5.0, top: 5.0, bottom: 5.0),
                     prefixIcon: const Icon(Icons.search),
-                    suffixIcon: _hasValue
+                    suffixIcon: hasTextFieldValue
                         ? IconButton(
                             icon: const Icon(Icons.clear),
                             onPressed: onClearTextField,
@@ -72,7 +69,7 @@ class _SearchPageState extends State<SearchPage> with RestorationMixin {
                 padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
                 child: currentState == ExplorePageState.calendarMode
                     ? InputChip(
-                        label: Text(_displayDate),
+                        label: Text(displayDate),
                         onDeleted: onClearDate,
                       )
                     : null),
@@ -128,56 +125,30 @@ class _SearchPageState extends State<SearchPage> with RestorationMixin {
   Future<void> _fetchDataForDate(String date) async {
     setCurrentPageState(ExplorePageState.loading);
 
-    try {
-      final response =
-          await http.get(Uri.parse(networkUtils.getFetchDaysUrl(date)));
-      final jsonData = jsonDecode(response.body);
-
-      if (response.statusCode == 200 && jsonData["success"]) {
-        final searchResults = jsonData['result'] as List;
-        final resultItems = searchResults
-            .map((e) => SearchItem(e["id"], e["name"], e["imageUrl"]))
-            .toList();
-
-        setState(() {
-          _data = resultItems;
-        });
-      } else {
-        setCurrentPageState(ExplorePageState.error);
-      }
-    } catch (e) {
+    final response = await exploreSearchRepository.fetchSelectedDateItems(date);
+    if (response is ExploreSearchSuccessResponse) {
+      setState(() {
+        _data = response.items;
+        currentState = ExplorePageState.calendarMode;
+      });
+    } else {
       setCurrentPageState(ExplorePageState.error);
     }
-
-    setCurrentPageState(ExplorePageState.calendarMode);
   }
 
   Future<void> _fetchDataForSearch(String keyword) async {
     setCurrentPageState(ExplorePageState.loading);
 
-    try {
-      final response =
-          await http.get(Uri.parse(networkUtils.getSearchUrl(keyword)));
-      final jsonData = jsonDecode(response.body);
-
-      if (response.statusCode == 200 && jsonData["success"]) {
-        final responseData = SearchResponse.fromJson(jsonData);
-
-        setState(() {
-          _data = responseData.items;
-          if (responseData.items.isEmpty) {
-            currentState = ExplorePageState.empty;
-          }
-          searchMessage = responseData.message;
-        });
-      } else {
-        setCurrentPageState(ExplorePageState.error);
-      }
-    } catch (e) {
+    final response = await exploreSearchRepository.fetchSearchItems(keyword);
+    if (response is ExploreSearchSuccessResponse) {
+      setState(() {
+        _data = response.items;
+        searchMessage = response.message;
+        currentState = ExplorePageState.searchMode;
+      });
+    } else {
       setCurrentPageState(ExplorePageState.error);
     }
-
-    setCurrentPageState(ExplorePageState.searchMode);
   }
 
   /// Helper functions **********/
@@ -192,7 +163,7 @@ class _SearchPageState extends State<SearchPage> with RestorationMixin {
   }
 
   void onTextChange(String s) {
-    _hasValue = s.isNotEmpty;
+    hasTextFieldValue = s.isNotEmpty;
     if (s.length > 1) {
       _fetchDataForSearch(s);
     } else if (s.isEmpty) {
@@ -206,14 +177,14 @@ class _SearchPageState extends State<SearchPage> with RestorationMixin {
     fieldText.clear();
     setState(() {
       currentState = ExplorePageState.initial;
-      _hasValue = false;
+      hasTextFieldValue = false;
       _data = [];
     });
   }
 
   void onClearDate() {
     setState(() {
-      _displayDate = "";
+      displayDate = "";
       currentState = ExplorePageState.initial;
       _data = [];
     });
@@ -258,7 +229,7 @@ class _SearchPageState extends State<SearchPage> with RestorationMixin {
     if (newSelectedDate != null) {
       onClearTextField();
       setState(() {
-        _displayDate = dateTimeUtil.formatDisplayDateFromDate(newSelectedDate);
+        displayDate = dateTimeUtil.formatDisplayDateFromDate(newSelectedDate);
         _selectedDate.value = newSelectedDate;
       });
       _fetchDataForDate(dateTimeUtil.formatEndpointDate(newSelectedDate));

@@ -1,24 +1,24 @@
-class SearchResponse {
+class ExploreSearchResponse {
   final String message;
-  final List<SearchItem> items;
+  final List<ExploreSearchItem> items;
 
-  SearchResponse(this.message, this.items);
+  ExploreSearchResponse(this.message, this.items);
 
-  factory SearchResponse.fromJson(dynamic json) {
+  factory ExploreSearchResponse.fromJson(dynamic json) {
     final searchMessage = json['result']["message"];
     final searchResults = json['result']["result"] as List;
 
     final searchItems = searchResults
-        .map((e) => SearchItem(e["id"], e["name"], e["imageUrl"]))
+        .map((e) => ExploreSearchItem(e["id"], e["name"], e["imageUrl"]))
         .toList();
-    return SearchResponse(searchMessage, searchItems);
+    return ExploreSearchResponse(searchMessage, searchItems);
   }
 }
 
-class SearchItem {
+class ExploreSearchItem {
   final String id;
   final String name;
   final String imageUrl;
 
-  SearchItem(this.id, this.name, this.imageUrl);
+  ExploreSearchItem(this.id, this.name, this.imageUrl);
 }
