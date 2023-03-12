@@ -41,11 +41,11 @@ class DetailsPage extends StatefulWidget {
 }
 
 class _DetailsPageState extends State<DetailsPage> {
-  late DetailDayItem _data;
   DateTimeUtil dateTimeUtil = const DateTimeUtil();
   final DetailsRepository detailsRepository = DetailsRepository();
   AddEventHelper addEventHelper = AddEventHelper();
   DetailPageState currentStata = DetailPageState.loading;
+  late DetailDayItem _data;
 
   @override
   void initState() {
