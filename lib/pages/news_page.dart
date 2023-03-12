@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -52,7 +53,6 @@ class _NewsPageState extends State<NewsPage> {
         _isLoading = false;
         _page += 1;
         _hasNext = responseData['hasNext'];
-        print(_hasNext);
         _items.addAll(responseData['result']);
       });
     } catch (e) {
@@ -88,8 +88,8 @@ class _NewsPageState extends State<NewsPage> {
           },
           leading: ClipRRect(
               borderRadius: BorderRadius.circular(10.0),
-              child: Image.network(
-                item["image"],
+              child: CachedNetworkImage(
+                imageUrl: item["image"],
                 width: 80,
                 height: 80,
                 fit: BoxFit.cover,
@@ -127,7 +127,7 @@ class _NewsPageState extends State<NewsPage> {
           itemCount: _items.length + 1,
           itemBuilder: _buildListItem,
           physics: const AlwaysScrollableScrollPhysics(),
-              padding: const EdgeInsets.fromLTRB(0,0,10.0,10),
+          padding: const EdgeInsets.fromLTRB(0, 0, 10.0, 10),
         )));
   }
 }

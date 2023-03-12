@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:national_calendar_hub_app/models/national_day.dart';
-import 'package:national_calendar_hub_app/pages/details/detail_screen_arguments.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:national_calendar_hub_app/pages/details/details.dart';
 
 abstract class HomeListItem {
@@ -19,7 +19,7 @@ class HeadingItem extends HomeListItem {
       padding: EdgeInsets.only(
         left: 16.w,
         right: 18.w,
-        top: 36.h,
+        top: 16.h,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -58,14 +58,7 @@ class DayHomeListItem extends StatelessWidget with HomeListItem {
   Widget build(BuildContext context) {
     return InkWell(
         onTap: () {
-          Navigator.pushNamed(
-            context,
-            DetailsPage.routeName,
-            arguments: DetailScreenArguments(
-              id,
-              "home",
-            ),
-          );
+          Navigator.of(context).push(DetailsPage.createRoute(id));
         },
         child: Container(
             margin: const EdgeInsets.only(
@@ -73,8 +66,8 @@ class DayHomeListItem extends StatelessWidget with HomeListItem {
             child: Column(children: [
               ClipRRect(
                   borderRadius: BorderRadius.circular(8.0),
-                  child: Image.network(
-                    "$imageUrl?width=600",
+                  child: CachedNetworkImage(
+                    imageUrl: "$imageUrl?width=600",
                     width: 500,
                     height: 250,
                     fit: BoxFit.cover,

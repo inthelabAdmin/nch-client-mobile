@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:national_calendar_hub_app/color_schemes.g.dart';
+import 'package:national_calendar_hub_app/pages/settings/theme/theme_settings_page.dart';
 
 abstract class SettingsListItem {
   Widget build(BuildContext context);
@@ -27,21 +28,20 @@ class SettingHeaderItem extends SettingsListItem {
   }
 }
 
-class SettingsDialogItem extends SettingsListItem {
-  final String leadingAssetPath;
-  final String title;
-  final String value;
-
-  SettingsDialogItem(this.leadingAssetPath, this.title, this.value);
+class SettingsThemeItem extends SettingsListItem {
+  SettingsThemeItem();
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       leading: ImageIcon(
-          color: lightColorScheme.primary, AssetImage(leadingAssetPath)),
-      title: Text(title),
-      trailing: Text(value),
-      onTap: () {},
+          color: lightColorScheme.primary,
+          const AssetImage('assets/icons/settings_theme.png')),
+      title: const Text("Theme"),
+      trailing: const Icon(Icons.chevron_right_rounded),
+      onTap: () {
+        Navigator.of(context).push(ThemeSettingsPage.createRoute());
+      },
     );
   }
 }

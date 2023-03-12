@@ -1,21 +1,45 @@
+import 'dart:convert';
+
+import 'package:add_2_calendar/add_2_calendar.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:http/http.dart' as http;
 import 'package:national_calendar_hub_app/models/detail_day_item.dart';
-import 'package:national_calendar_hub_app/pages/details/detail_screen_arguments.dart';
 import 'package:national_calendar_hub_app/pages/details/hashtag_dialog.dart';
 import 'package:national_calendar_hub_app/utils/datetime_utils.dart';
 import 'package:national_calendar_hub_app/utils/icons.dart';
 import 'package:national_calendar_hub_app/widgets/svg_asset.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'dart:convert';
-import '../../utils/network_utils.dart';
-import 'package:http/http.dart' as http;
 import 'package:share_plus/share_plus.dart';
-import 'package:add_2_calendar/add_2_calendar.dart';
+
+import '../../utils/network_utils.dart';
 
 class DetailsPage extends StatefulWidget {
-  const DetailsPage({Key? key}) : super(key: key);
+  const DetailsPage({Key? key, required this.id}) : super(key: key);
 
   static const routeName = '/details';
+
+  final String id;
+
+  static Route createRoute(String id) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) =>
+          DetailsPage(id: id),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(1.0, 0.0);
+        const end = Offset.zero;
+        const curve = Curves.ease;
+
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+    );
+  }
 
   @override
   State<DetailsPage> createState() => _DetailsPageState();
@@ -77,12 +101,12 @@ class _DetailsPageState extends State<DetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final args =
-        ModalRoute.of(context)!.settings.arguments as DetailScreenArguments;
+    /*final args =
+        ModalRoute.of(context)!.settings.arguments as DetailScreenArguments;*/
 
     // TODO Error/Null CHeck
     if (_isLoading) {
-      _fetchData(args.id);
+      _fetchData(widget.id);
       return const Center(child: CircularProgressIndicator());
     } else {
       return Scaffold(
@@ -94,24 +118,12 @@ class _DetailsPageState extends State<DetailsPage> {
                 icon: const Icon(Icons.calendar_today)),
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 0, 16, 0),
-              child: InkWell(
-                borderRadius: BorderRadius.circular(360),
-                onTap: () {
-                  onShare(context, _data.shareUrl);
-                },
-                child: SizedBox(
-                  height: 35.w,
-                  width: 35.w,
-                  child: Center(
-                    child: SvgAsset(
-                      assetName: AssetName.share,
-                      height: 24.w,
-                      width: 24.w,
-                    ),
-                  ),
-                ),
-              ),
-            )
+              child: IconButton(
+                  onPressed: () {
+                    onShare(context, _data.shareUrl);
+                  },
+                  icon: const Icon(Icons.share_outlined)),
+            ),
           ]),
           body: CustomScrollView(
             slivers: [
@@ -139,8 +151,8 @@ class _DetailsPageState extends State<DetailsPage> {
                                 ))),
                         ClipRRect(
                             borderRadius: BorderRadius.circular(8.0),
-                            child: Image.network(
-                              "${_data.imageUrl}?width=600",
+                            child: CachedNetworkImage(
+                              imageUrl: "${_data.imageUrl}?width=600",
                               width: 500,
                               height: 250,
                               fit: BoxFit.cover,

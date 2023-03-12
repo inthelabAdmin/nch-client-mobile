@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:national_calendar_hub_app/pages/main_navigation_page.dart';
-import 'color_schemes.g.dart';
-import 'pages/details/details.dart';
+import 'package:national_calendar_hub_app/provider/theme_provider.dart';
+import 'package:provider/provider.dart';
+
+import 'pages/settings/theme/theme_prefereneces.dart';
+import 'storage/shared_preferences_manager.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,31 +16,19 @@ class MyApp extends StatelessWidget {
 
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
-    return ScreenUtilInit(
-        designSize: const Size(375, 812),
-        builder: (BuildContext context, child) => MaterialApp(
-              routes: {
-                DetailsPage.routeName: (context) => const DetailsPage(),
-              },
-              debugShowCheckedModeBanner: false,
-              title: 'National Calendar Hub',
-              theme: ThemeData(
-                useMaterial3: true,
-                colorScheme: lightColorScheme,
-                fontFamily: 'Urbanist',
-                textTheme: TextTheme(
-                    bodyMedium: TextStyle(
-                      color: lightColorScheme.primary
-                    )
-                )
-              ),
-              darkTheme: ThemeData(
-                useMaterial3: true,
-                colorScheme: darkColorScheme,
-                fontFamily: 'Urbanist',
-              ),
-              home: const MainNavigationPage(),
-            ));
-  }
+  Widget build(BuildContext context) => ChangeNotifierProvider(
+      create: (context) => ThemeProvider(),
+      builder: (context, _) {
+        final themeProvider = Provider.of<ThemeProvider>(context);
+        return ScreenUtilInit(
+            designSize: const Size(375, 812),
+            builder: (BuildContext context, child) => MaterialApp(
+                  debugShowCheckedModeBanner: false,
+                  title: 'National Calendar Hub',
+                  themeMode: themeProvider.themeMode,
+                  theme: AppThemes.lightTheme,
+                  darkTheme: AppThemes.darkTheme,
+                  home: const MainNavigationPage(),
+                ));
+      });
 }

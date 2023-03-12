@@ -1,12 +1,12 @@
+import 'dart:convert';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:national_calendar_hub_app/models/response/search_response.dart';
-import 'package:national_calendar_hub_app/pages/details/detail_screen_arguments.dart';
 import 'package:national_calendar_hub_app/pages/details/details.dart';
 import 'package:national_calendar_hub_app/utils/datetime_utils.dart';
 import 'package:national_calendar_hub_app/utils/network_utils.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-
 import 'package:national_calendar_hub_app/widgets/empty_state.dart';
 
 class SearchPage extends StatefulWidget {
@@ -130,11 +130,9 @@ class _SearchPageState extends State<SearchPage> with RestorationMixin {
     final ColorScheme colors = Theme.of(context).colorScheme;
     return Scaffold(
         appBar: AppBar(
-          title: Container(
+          title: SizedBox(
             width: double.infinity,
             height: 40,
-            decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(5)),
             child: Center(
               child: TextField(
                 enabled: !_disableTextField,
@@ -189,22 +187,16 @@ class _SearchPageState extends State<SearchPage> with RestorationMixin {
                       return ListTile(
                         leading: ClipRRect(
                             borderRadius: BorderRadius.circular(35.0),
-                            child: Image.network(
-                              "${currentItem.imageUrl}?width=100",
+                            child: CachedNetworkImage(
+                              imageUrl: "${currentItem.imageUrl}?width=100",
                               width: 50,
                               height: 50,
                               fit: BoxFit.cover,
                             )),
                         title: Text(currentItem.name),
                         onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            DetailsPage.routeName,
-                            arguments: DetailScreenArguments(
-                              currentItem.id,
-                              "search",
-                            ),
-                          );
+                          Navigator.of(context)
+                              .push(DetailsPage.createRoute(currentItem.id));
                         },
                       );
                     }));
