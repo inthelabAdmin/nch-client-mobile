@@ -85,7 +85,7 @@ class _DetailsPageState extends State<DetailsPage> {
   @override
   Widget build(BuildContext context) {
     return currentStata == DetailPageState.loading
-        ? const Center(child: CircularProgressIndicator())
+        ? const Scaffold( body: Center(child: CircularProgressIndicator()))
         : currentStata == DetailPageState.error
             ? Scaffold(
                 appBar: AppBar(

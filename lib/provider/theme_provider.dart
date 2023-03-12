@@ -31,26 +31,12 @@ class ThemeProvider extends ChangeNotifier {
 
 class AppThemes {
   static final darkTheme = ThemeData(
-      useMaterial3: true,
-      colorScheme: darkColorScheme,
-      fontFamily: 'Urbanist',
-      appBarTheme: AppBarTheme(
-          systemOverlayStyle: SystemUiOverlayStyle(
-        statusBarColor: darkColorScheme.background,
-        statusBarIconBrightness: Brightness.light,
-        statusBarBrightness: Brightness.dark,
-      )));
+      useMaterial3: true, colorScheme: darkColorScheme, fontFamily: 'Urbanist');
 
   static final lightTheme = ThemeData(
       useMaterial3: true,
       colorScheme: lightColorScheme,
       fontFamily: 'Urbanist',
-      appBarTheme: AppBarTheme(
-          systemOverlayStyle: SystemUiOverlayStyle(
-        statusBarColor: lightColorScheme.background,
-        statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.light,
-      )),
       textTheme:
           TextTheme(bodyMedium: TextStyle(color: lightColorScheme.primary)));
 }

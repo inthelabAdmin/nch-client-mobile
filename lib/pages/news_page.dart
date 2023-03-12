@@ -80,60 +80,52 @@ class _NewsPageState extends State<NewsPage> {
   }
 
   Widget _buildListItem(BuildContext context, int index) {
-    if (index == _items.length) {
-      return currentPageState == NewsPageState.loading
-          ? const Center(
-              child: CircularProgressIndicator(),
+    if (index < _items.length) {
+      final item = _items[index];
+      return item is NewsHeaderItem
+          ? Padding(
+              padding: EdgeInsets.only(
+                  left: 16.w, right: 18.w, top: 12.h, bottom: 30.h),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(item.title,
+                      style: TextStyle(
+                          fontSize: 30.w, fontWeight: FontWeight.bold)),
+                ],
+              ),
             )
-          : Container();
+          : ListTile(
+              onTap: () {
+                _launchURL(item["link"]);
+              },
+              leading: ClipRRect(
+                  borderRadius: BorderRadius.circular(10.0),
+                  child: CachedNetworkImage(
+                    imageUrl: item["image"],
+                    width: 80,
+                    height: 80,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => Container(
+                      color: Colors.grey,
+                    ),
+                    errorWidget: (context, url, error) =>
+                        Container(color: Colors.grey),
+                  )),
+              title: Text(
+                item['title'],
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontWeight: FontWeight.w600),
+              ),
+              subtitle: Text(item['source']),
+            );
     } else {
-      if (index < _items.length) {
-        final item = _items[index];
-        return item is NewsHeaderItem
-            ? Padding(
-                padding: EdgeInsets.only(
-                    left: 16.w, right: 18.w, top: 12.h, bottom: 30.h),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(item.title,
-                        style: TextStyle(
-                            fontSize: 30.w, fontWeight: FontWeight.bold)),
-                  ],
-                ),
-              )
-            : ListTile(
-                onTap: () {
-                  _launchURL(item["link"]);
-                },
-                leading: ClipRRect(
-                    borderRadius: BorderRadius.circular(10.0),
-                    child: CachedNetworkImage(
-                      imageUrl: item["image"],
-                      width: 80,
-                      height: 80,
-                      fit: BoxFit.cover,
-                      placeholder: (context, url) => Container(
-                        color: Colors.grey,
-                      ),
-                      errorWidget: (context, url, error) =>
-                          Container(color: Colors.grey),
-                    )),
-                title: Text(
-                  item['title'],
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontWeight: FontWeight.w600),
-                ),
-                subtitle: Text(item['source']),
-              );
-      } else {
-        return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 32),
-            child: Center(
-              child: _hasNext ? const CircularProgressIndicator() : Container(),
-            ));
-      }
+      return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 32),
+          child: Center(
+            child: _hasNext ? const CircularProgressIndicator() : Container(),
+          ));
     }
   }
 
@@ -141,15 +133,19 @@ class _NewsPageState extends State<NewsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: SafeArea(
-            child: currentPageState == NewsPageState.error
-                ? const Center(child: ErrorState())
-                : ListView.builder(
-                    controller: controller,
-                    itemCount: _items.length + 1,
-                    itemBuilder: _buildListItem,
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    padding: const EdgeInsets.fromLTRB(0, 0, 10.0, 10),
-                  )));
+            child: currentPageState == NewsPageState.loading
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : currentPageState == NewsPageState.error
+                    ? const Center(child: ErrorState())
+                    : ListView.builder(
+                        controller: controller,
+                        itemCount: _items.length + 1,
+                        itemBuilder: _buildListItem,
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        padding: const EdgeInsets.fromLTRB(0, 0, 10.0, 10),
+                      )));
   }
 }
 
