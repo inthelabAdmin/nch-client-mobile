@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:national_calendar_hub_app/color_schemes.g.dart';
 import 'package:national_calendar_hub_app/pages/settings/theme/theme_prefereneces.dart';
 import 'package:national_calendar_hub_app/storage/shared_preferences_manager.dart';
@@ -6,11 +7,7 @@ import 'package:national_calendar_hub_app/storage/shared_preferences_manager.dar
 class ThemeProvider extends ChangeNotifier {
   ThemeMode themeMode = ThemeMode.system;
 
-  ThemeProvider() {
-    _fetchSavedTheme();
-  }
-
-  Future<void> _fetchSavedTheme() async {
+  Future<void> fetchSavedTheme() async {
     int savedTheme =
         await SharedPrefsManager.getInt(ThemePreferences.KEY_PREF_THEME) ?? 0;
     setTheme(savedTheme);
@@ -27,21 +24,33 @@ class ThemeProvider extends ChangeNotifier {
       default:
         themeMode = ThemeMode.system;
     }
+
     notifyListeners();
   }
 }
 
 class AppThemes {
   static final darkTheme = ThemeData(
-    useMaterial3: true,
-    colorScheme: darkColorScheme,
-    fontFamily: 'Urbanist',
-  );
+      useMaterial3: true,
+      colorScheme: darkColorScheme,
+      fontFamily: 'Urbanist',
+      appBarTheme: AppBarTheme(
+          systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarColor: darkColorScheme.background,
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark,
+      )));
 
   static final lightTheme = ThemeData(
       useMaterial3: true,
       colorScheme: lightColorScheme,
       fontFamily: 'Urbanist',
+      appBarTheme: AppBarTheme(
+          systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarColor: lightColorScheme.background,
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.light,
+      )),
       textTheme:
           TextTheme(bodyMedium: TextStyle(color: lightColorScheme.primary)));
 }
