@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:national_calendar_hub_app/widgets/error_state.dart';
 import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:national_calendar_hub_app/utils/network_utils.dart';
@@ -19,6 +20,7 @@ class _NewsPageState extends State<NewsPage> {
   bool _isLoading = false;
   bool _hasNext = true;
   int _page = 1;
+  bool showError = false;
 
   @override
   void initState() {
@@ -49,18 +51,29 @@ class _NewsPageState extends State<NewsPage> {
           await http.get(Uri.parse(networkUtils.getArticlesUrl(_page)));
       final responseData = json.decode(response.body);
 
-      setState(() {
-        _isLoading = false;
-        _page += 1;
-        _hasNext = responseData['hasNext'];
-        _items.addAll(responseData['result']);
-      });
+      if (response.statusCode == 200 && responseData["success"]) {
+        setState(() {
+          _isLoading = false;
+          _page += 1;
+          _hasNext = responseData['hasNext'];
+          _items.addAll(responseData['result']);
+        });
+      } else if (_items.isEmpty) {
+        setShowError();
+      }
     } catch (e) {
-      setState(() {
-        _isLoading = false;
-      });
-      print(e);
+      setShowError();
     }
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  void setShowError() {
+    setState(() {
+      showError = true;
+    });
   }
 
   _launchURL(String url) async {
@@ -93,6 +106,11 @@ class _NewsPageState extends State<NewsPage> {
                 width: 80,
                 height: 80,
                 fit: BoxFit.cover,
+                placeholder: (context, url) => Container(
+                  color: Colors.grey,
+                ),
+                errorWidget: (context, url, error) =>
+                    Container(color: Colors.grey),
               )),
           title: Text(
             item['title'],
@@ -122,12 +140,14 @@ class _NewsPageState extends State<NewsPage> {
           ),
         ),
         body: SafeArea(
-            child: ListView.builder(
-          controller: controller,
-          itemCount: _items.length + 1,
-          itemBuilder: _buildListItem,
-          physics: const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.fromLTRB(0, 0, 10.0, 10),
-        )));
+            child: showError
+                ? const Center(child: ErrorState())
+                : ListView.builder(
+                    controller: controller,
+                    itemCount: _items.length + 1,
+                    itemBuilder: _buildListItem,
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: const EdgeInsets.fromLTRB(0, 0, 10.0, 10),
+                  )));
   }
 }

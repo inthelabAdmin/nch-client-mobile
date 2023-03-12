@@ -8,6 +8,7 @@ import 'package:national_calendar_hub_app/pages/details/details.dart';
 import 'package:national_calendar_hub_app/utils/datetime_utils.dart';
 import 'package:national_calendar_hub_app/utils/network_utils.dart';
 import 'package:national_calendar_hub_app/widgets/empty_state.dart';
+import 'package:national_calendar_hub_app/widgets/error_state.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
@@ -30,6 +31,7 @@ class _SearchPageState extends State<SearchPage> with RestorationMixin {
   bool _disableTextField = false;
   String _displayDate = "";
   String searchMessage = "";
+  bool showError = false;
 
   @override
   void initState() {
@@ -39,24 +41,28 @@ class _SearchPageState extends State<SearchPage> with RestorationMixin {
   Future<void> _fetchDataForDate(String date) async {
     setState(() {
       _isLoading = true;
+      showError = false;
     });
 
     try {
       final response =
           await http.get(Uri.parse(networkUtils.getFetchDaysUrl(date)));
       final jsonData = jsonDecode(response.body);
-      final searchResults = jsonData['result'] as List;
 
-      final resultItems = searchResults
-          .map((e) => SearchItem(e["id"], e["name"], e["imageUrl"]))
-          .toList();
+      if (response.statusCode == 200 && jsonData["success"]) {
+        final searchResults = jsonData['result'] as List;
+        final resultItems = searchResults
+            .map((e) => SearchItem(e["id"], e["name"], e["imageUrl"]))
+            .toList();
 
-      setState(() {
-        _data = resultItems;
-      });
+        setState(() {
+          _data = resultItems;
+        });
+      } else {
+        setShowError();
+      }
     } catch (e) {
-      // TODO ERROR HANDLING
-      print('Error fetching remote data: $e');
+      setShowError();
     }
 
     setState(() {
@@ -67,31 +73,42 @@ class _SearchPageState extends State<SearchPage> with RestorationMixin {
   Future<void> _fetchDataForSearch(String keyword) async {
     setState(() {
       _isLoading = true;
+      showError = false;
     });
 
     try {
       final response =
           await http.get(Uri.parse(networkUtils.getSearchUrl(keyword)));
       final jsonData = jsonDecode(response.body);
-      final responseData = SearchResponse.fromJson(jsonData);
 
-      setState(() {
-        _data = responseData.items;
-        if (responseData.items.isEmpty) {
-          _showNotFoundMessage = true;
-          searchMessage = responseData.message;
-        } else {
-          _showNotFoundMessage = false;
-          searchMessage = "";
-        }
-      });
+      if (response.statusCode == 200 && jsonData["success"]) {
+        final responseData = SearchResponse.fromJson(jsonData);
+
+        setState(() {
+          _data = responseData.items;
+          if (responseData.items.isEmpty) {
+            _showNotFoundMessage = true;
+            searchMessage = responseData.message;
+          } else {
+            _showNotFoundMessage = false;
+            searchMessage = "";
+          }
+        });
+      } else {
+        setShowError();
+      }
     } catch (e) {
-      // TODO ERROR HANDLING
-      print('Error fetching remote data: $e');
+      setShowError();
     }
 
     setState(() {
       _isLoading = false;
+    });
+  }
+
+  void setShowError() {
+    setState(() {
+      showError = true;
     });
   }
 
@@ -110,6 +127,7 @@ class _SearchPageState extends State<SearchPage> with RestorationMixin {
     fieldText.clear();
     setState(() {
       _showNotFoundMessage = false;
+      showError = false;
       _hasValue = false;
       _data = [];
     });
@@ -119,6 +137,7 @@ class _SearchPageState extends State<SearchPage> with RestorationMixin {
     setState(() {
       _displayDate = "";
       _disableTextField = false;
+      showError = false;
       _data = [];
     });
   }
@@ -177,29 +196,35 @@ class _SearchPageState extends State<SearchPage> with RestorationMixin {
         ),
         body: _isLoading
             ? const Center(child: CircularProgressIndicator())
-            : _showNotFoundMessage
-                ? EmptyState(headerTitle: searchMessage)
-                : ListView.builder(
-                    physics: const BouncingScrollPhysics(),
-                    itemCount: _data.length,
-                    itemBuilder: (context, index) {
-                      final currentItem = _data[index];
-                      return ListTile(
-                        leading: ClipRRect(
-                            borderRadius: BorderRadius.circular(35.0),
-                            child: CachedNetworkImage(
-                              imageUrl: "${currentItem.imageUrl}?width=100",
-                              width: 50,
-                              height: 50,
-                              fit: BoxFit.cover,
-                            )),
-                        title: Text(currentItem.name),
-                        onTap: () {
-                          Navigator.of(context)
-                              .push(DetailsPage.createRoute(currentItem.id));
-                        },
-                      );
-                    }));
+            : showError
+                ? const Center(child: ErrorState())
+                : _showNotFoundMessage
+                    ? EmptyState(headerTitle: searchMessage)
+                    : ListView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: _data.length,
+                        itemBuilder: (context, index) {
+                          final currentItem = _data[index];
+                          return ListTile(
+                            leading: ClipRRect(
+                                borderRadius: BorderRadius.circular(35.0),
+                                child: CachedNetworkImage(
+                                  imageUrl: "${currentItem.imageUrl}?width=100",
+                                  width: 50,
+                                  height: 50,
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) =>
+                                      Container(color: Colors.grey),
+                                  errorWidget: (context, url, error) =>
+                                      Container(color: Colors.grey),
+                                )),
+                            title: Text(currentItem.name),
+                            onTap: () {
+                              Navigator.of(context).push(
+                                  DetailsPage.createRoute(currentItem.id));
+                            },
+                          );
+                        }));
   }
 
   @override

@@ -3,7 +3,6 @@ import 'package:national_calendar_hub_app/pages/home_page.dart';
 import 'package:national_calendar_hub_app/pages/news_page.dart';
 import 'package:national_calendar_hub_app/pages/search_page.dart';
 import 'package:national_calendar_hub_app/pages/settings/settings_page.dart';
-
 import '../color_schemes.g.dart';
 
 class MainNavigationPage extends StatefulWidget {

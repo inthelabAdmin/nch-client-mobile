@@ -68,9 +68,14 @@ class DayHomeListItem extends StatelessWidget with HomeListItem {
                   borderRadius: BorderRadius.circular(8.0),
                   child: CachedNetworkImage(
                     imageUrl: "$imageUrl?width=600",
-                    width: 500,
+                    width: double.infinity,
                     height: 250,
                     fit: BoxFit.cover,
+                    placeholder: (context, url) => Container(
+                      color: Colors.grey,
+                    ),
+                    errorWidget: (context, url, error) =>
+                        Container(color: Colors.grey),
                   )),
               SizedBox(
                   width: double.infinity,
@@ -84,11 +89,13 @@ class DayHomeListItem extends StatelessWidget with HomeListItem {
               SizedBox(
                   width: double.infinity,
                   child: Container(
-                      margin: const EdgeInsets.only(bottom: 16.0),
-                      child: Text(subtitle,
-                          textAlign: TextAlign.left,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis))),
+                    margin: const EdgeInsets.only(bottom: 16.0),
+                    child: Text(subtitle,
+                        style: const TextStyle(height: 1.5, letterSpacing: 0.5),
+                        textAlign: TextAlign.left,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis),
+                  )),
             ])));
   }
 }

@@ -3,11 +3,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:national_calendar_hub_app/pages/main_navigation_page.dart';
 import 'package:national_calendar_hub_app/provider/theme_provider.dart';
 import 'package:provider/provider.dart';
-
-import 'pages/settings/theme/theme_prefereneces.dart';
-import 'storage/shared_preferences_manager.dart';
+import 'package:flutter/services.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
   runApp(const MyApp());
 }
 
