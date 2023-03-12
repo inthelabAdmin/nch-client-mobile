@@ -5,6 +5,7 @@ import 'package:national_calendar_hub_app/widgets/error_state.dart';
 import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:national_calendar_hub_app/utils/network_utils.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class NewsPage extends StatefulWidget {
   const NewsPage({Key? key}) : super(key: key);
@@ -16,7 +17,7 @@ class NewsPage extends StatefulWidget {
 class _NewsPageState extends State<NewsPage> {
   final controller = ScrollController();
   NetworkUtils networkUtils = const NetworkUtils();
-  final List<dynamic> _items = [];
+  final List<dynamic> _items = [NewsHeaderItem("News")];
   NewsPageState currentPageState = NewsPageState.initial;
   bool _hasNext = true;
   int _page = 1;
@@ -88,31 +89,44 @@ class _NewsPageState extends State<NewsPage> {
     } else {
       if (index < _items.length) {
         final item = _items[index];
-        return ListTile(
-          onTap: () {
-            _launchURL(item["link"]);
-          },
-          leading: ClipRRect(
-              borderRadius: BorderRadius.circular(10.0),
-              child: CachedNetworkImage(
-                imageUrl: item["image"],
-                width: 80,
-                height: 80,
-                fit: BoxFit.cover,
-                placeholder: (context, url) => Container(
-                  color: Colors.grey,
+        return item is NewsHeaderItem
+            ? Padding(
+                padding: EdgeInsets.only(
+                    left: 16.w, right: 18.w, top: 12.h, bottom: 30.h),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(item.title,
+                        style: TextStyle(
+                            fontSize: 30.w, fontWeight: FontWeight.bold)),
+                  ],
                 ),
-                errorWidget: (context, url, error) =>
-                    Container(color: Colors.grey),
-              )),
-          title: Text(
-            item['title'],
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontWeight: FontWeight.w600),
-          ),
-          subtitle: Text(item['source']),
-        );
+              )
+            : ListTile(
+                onTap: () {
+                  _launchURL(item["link"]);
+                },
+                leading: ClipRRect(
+                    borderRadius: BorderRadius.circular(10.0),
+                    child: CachedNetworkImage(
+                      imageUrl: item["image"],
+                      width: 80,
+                      height: 80,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => Container(
+                        color: Colors.grey,
+                      ),
+                      errorWidget: (context, url, error) =>
+                          Container(color: Colors.grey),
+                    )),
+                title: Text(
+                  item['title'],
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontWeight: FontWeight.w600),
+                ),
+                subtitle: Text(item['source']),
+              );
       } else {
         return Padding(
             padding: const EdgeInsets.symmetric(vertical: 32),
@@ -126,13 +140,6 @@ class _NewsPageState extends State<NewsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.background,
-          title: const Text(
-            "News",
-            style: TextStyle(fontWeight: FontWeight.w600),
-          ),
-        ),
         body: SafeArea(
             child: currentPageState == NewsPageState.error
                 ? const Center(child: ErrorState())
@@ -146,4 +153,10 @@ class _NewsPageState extends State<NewsPage> {
   }
 }
 
-enum NewsPageState {initial, loading, success, error }
+class NewsHeaderItem {
+  final String title;
+
+  NewsHeaderItem(this.title);
+}
+
+enum NewsPageState { initial, loading, success, error }
