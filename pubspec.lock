@@ -208,6 +208,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.5"
+  lazy_load_indexed_stack:
+    dependency: "direct main"
+    description:
+      name: lazy_load_indexed_stack
+      sha256: e0cd66b912323f76b6b75d41e5182857d1c67179efc1f4511ad84512dab3c329
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.4"
   lints:
     dependency: transitive
     description:

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:lazy_load_indexed_stack/lazy_load_indexed_stack.dart';
+import 'package:national_calendar_hub_app/pages/explore_search_page.dart';
 import 'package:national_calendar_hub_app/pages/home_page.dart';
 import 'package:national_calendar_hub_app/pages/news_page.dart';
-import 'package:national_calendar_hub_app/pages/explore_search_page.dart';
 import 'package:national_calendar_hub_app/pages/settings/settings_page.dart';
+
 import '../color_schemes.g.dart';
 
 class MainNavigationPage extends StatefulWidget {
@@ -32,7 +34,7 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: _pages.elementAt(_selectedIndex),
+        child: LazyLoadIndexedStack(index: _selectedIndex, children: _pages),
       ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: lightColorScheme.primary,
@@ -81,6 +83,5 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
         ],
       ),
     );
-    ;
   }
 }

@@ -15,10 +15,10 @@ class NewsPage extends StatefulWidget {
 }
 
 class _NewsPageState extends State<NewsPage> {
-  final controller = ScrollController();
-  NetworkUtils networkUtils = const NetworkUtils();
+  final _controller = ScrollController();
+  final NetworkUtils _networkUtils = const NetworkUtils();
   final List<dynamic> _items = [NewsHeaderItem("News")];
-  NewsPageState currentPageState = NewsPageState.initial;
+  NewsPageState _currentPageState = NewsPageState.initial;
   bool _hasNext = true;
   int _page = 1;
 
@@ -26,8 +26,8 @@ class _NewsPageState extends State<NewsPage> {
   void initState() {
     super.initState();
     _loadData();
-    controller.addListener(() {
-      if (controller.position.maxScrollExtent == controller.offset) {
+    _controller.addListener(() {
+      if (_controller.position.maxScrollExtent == _controller.offset) {
         _loadData();
       }
     });
@@ -35,38 +35,38 @@ class _NewsPageState extends State<NewsPage> {
 
   @override
   void dispose() {
-    controller.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
-  void updatePageState(NewsPageState state) {
+  void _updatePageState(NewsPageState state) {
     setState(() {
-      currentPageState = state;
+      _currentPageState = state;
     });
   }
 
   Future<void> _loadData() async {
-    if (currentPageState == NewsPageState.loading) return;
+    if (_currentPageState == NewsPageState.loading) return;
 
-    updatePageState(NewsPageState.loading);
-
+    _updatePageState(NewsPageState.loading);
+    
     try {
       final response =
-          await http.get(Uri.parse(networkUtils.getArticlesUrl(_page)));
+          await http.get(Uri.parse(_networkUtils.getArticlesUrl(_page)));
       final responseData = json.decode(response.body);
 
       if (response.statusCode == 200 && responseData["success"]) {
         setState(() {
-          currentPageState = NewsPageState.success;
+          _currentPageState = NewsPageState.success;
           _page += 1;
           _hasNext = responseData['hasNext'];
           _items.addAll(responseData['result']);
         });
       } else if (_items.isEmpty) {
-        updatePageState(NewsPageState.error);
+        _updatePageState(NewsPageState.error);
       }
     } catch (e) {
-      updatePageState(NewsPageState.error);
+      _updatePageState(NewsPageState.error);
     }
   }
 
@@ -133,14 +133,14 @@ class _NewsPageState extends State<NewsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: SafeArea(
-            child: currentPageState == NewsPageState.loading
+            child: _currentPageState == NewsPageState.loading
                 ? const Center(
                     child: CircularProgressIndicator(),
                   )
-                : currentPageState == NewsPageState.error
+                : _currentPageState == NewsPageState.error
                     ? const Center(child: ErrorState())
                     : ListView.builder(
-                        controller: controller,
+                        controller: _controller,
                         itemCount: _items.length + 1,
                         itemBuilder: _buildListItem,
                         physics: const AlwaysScrollableScrollPhysics(),

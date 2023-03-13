@@ -12,8 +12,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<HomeListItem> _listItems = [];
-  HomeRepository homeRepository = HomeRepository();
-  HomePageState currentPageState = HomePageState.loading;
+  final HomeRepository _homeRepository = HomeRepository();
+  HomePageState _currentPageState = HomePageState.loading;
 
   @override
   void initState() {
@@ -24,11 +24,11 @@ class _HomePageState extends State<HomePage> {
   Future<void> _fetchData() async {
     setCurrentPageState(HomePageState.loading);
 
-    final response = await homeRepository.fetchHomePageItems();
+    final response = await _homeRepository.fetchHomePageItems();
     if (response is HomeSuccessResponse) {
       setState(() {
         _listItems = response.listItems;
-        currentPageState = HomePageState.success;
+        _currentPageState = HomePageState.success;
       });
     } else {
       setCurrentPageState(HomePageState.error);
@@ -37,15 +37,15 @@ class _HomePageState extends State<HomePage> {
 
   void setCurrentPageState(HomePageState state) {
     setState(() {
-      currentPageState = state;
+      _currentPageState = state;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return currentPageState == HomePageState.loading
+    return _currentPageState == HomePageState.loading
         ? const Center(child: CircularProgressIndicator())
-        : currentPageState == HomePageState.error
+        : _currentPageState == HomePageState.error
             ? const ErrorState()
             : Scaffold(
                 body: SafeArea(

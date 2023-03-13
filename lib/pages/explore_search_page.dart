@@ -22,13 +22,13 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
     with RestorationMixin {
   final _debounce = Debounce();
   List<ExploreSearchItem> _data = [];
-  DateTimeUtil dateTimeUtil = const DateTimeUtil();
-  ExploreSearchRepository exploreSearchRepository = ExploreSearchRepository();
-  final fieldText = TextEditingController();
-  ExplorePageState currentState = ExplorePageState.initial;
-  bool hasTextFieldValue = false;
-  String displayDate = "";
-  String searchMessage = "";
+  final DateTimeUtil _dateTimeUtil = const DateTimeUtil();
+  final ExploreSearchRepository _exploreSearchRepository = ExploreSearchRepository();
+  final _fieldText = TextEditingController();
+  ExplorePageState _currentState = ExplorePageState.initial;
+  bool _hasTextFieldValue = false;
+  String _displayDate = "";
+  String _searchMessage = "";
 
   @override
   void initState() {
@@ -36,17 +36,14 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
   }
 
   @override
-  void dispose(){
+  void dispose() {
     _debounce.dispose();
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
-    final ColorScheme colors = Theme
-        .of(context)
-        .colorScheme;
+    final ColorScheme colors = Theme.of(context).colorScheme;
     return Scaffold(
         appBar: AppBar(
           backgroundColor: colors.background,
@@ -55,19 +52,19 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
             height: 40,
             child: Center(
               child: TextField(
-                enabled: currentState != ExplorePageState.calendarMode,
-                onChanged: onTextChange,
+                enabled: _currentState != ExplorePageState.calendarMode,
+                onChanged: _onTextChange,
                 textInputAction: TextInputAction.search,
-                controller: fieldText,
+                controller: _fieldText,
                 decoration: InputDecoration(
                     contentPadding: const EdgeInsets.only(
                         left: 5.0, right: 5.0, top: 5.0, bottom: 5.0),
                     prefixIcon: const Icon(Icons.search),
-                    suffixIcon: hasTextFieldValue
+                    suffixIcon: _hasTextFieldValue
                         ? IconButton(
-                      icon: const Icon(Icons.clear),
-                      onPressed: onClearTextField,
-                    )
+                            icon: const Icon(Icons.clear),
+                            onPressed: _onClearTextField,
+                          )
                         : null,
                     hintText: 'Search...',
                     border: const OutlineInputBorder(
@@ -78,130 +75,131 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
           actions: [
             Padding(
                 padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
-                child: currentState == ExplorePageState.calendarMode
+                child: _currentState == ExplorePageState.calendarMode
                     ? InputChip(
-                  label: Text(displayDate),
-                  onDeleted: onClearDate,
-                )
+                        label: Text(_displayDate),
+                        onDeleted: _onClearDate,
+                      )
                     : null),
             Padding(
                 padding: const EdgeInsets.fromLTRB(0, 0, 16, 0),
                 child: IconButton(
                     icon: const Icon(Icons.calendar_month_rounded),
-                    onPressed: onCalendarButtonClick,
+                    onPressed: _onCalendarButtonClick,
                     style: IconButton.styleFrom(
                         focusColor: colors.onSurfaceVariant.withOpacity(0.12),
                         highlightColor: colors.onSurface.withOpacity(0.12),
                         side: BorderSide(color: colors.outline))))
           ],
         ),
-        body: currentState == ExplorePageState.initial
+        body: _currentState == ExplorePageState.initial
             ? const Center(child: SearchInitialPage())
-            : currentState == ExplorePageState.loading
-            ? const Center(child: CircularProgressIndicator())
-            : currentState == ExplorePageState.error
-            ? const Center(child: ErrorState())
-            : currentState == ExplorePageState.empty
-            ? EmptyState(headerTitle: searchMessage)
-            : ListView.builder(
-            physics: const BouncingScrollPhysics(),
-            itemCount: _data.length,
-            itemBuilder: (context, index) {
-              final currentItem = _data[index];
-              return ListTile(
-                leading: ClipRRect(
-                    borderRadius: BorderRadius.circular(35.0),
-                    child: CachedNetworkImage(
-                      imageUrl:
-                      "${currentItem.imageUrl}?width=100",
-                      width: 50,
-                      height: 50,
-                      fit: BoxFit.cover,
-                      placeholder: (context, url) =>
-                          Container(color: Colors.grey),
-                      errorWidget: (context, url, error) =>
-                          Container(color: Colors.grey),
-                    )),
-                title: Text(currentItem.name),
-                onTap: () {
-                  Navigator.of(context).push(
-                      DetailsPage.createRoute(currentItem.id));
-                },
-              );
-            }));
+            : _currentState == ExplorePageState.loading
+                ? const Center(child: CircularProgressIndicator())
+                : _currentState == ExplorePageState.error
+                    ? const Center(child: ErrorState())
+                    : _currentState == ExplorePageState.empty
+                        ? EmptyState(headerTitle: _searchMessage)
+                        : ListView.builder(
+                            physics: const BouncingScrollPhysics(),
+                            itemCount: _data.length,
+                            itemBuilder: (context, index) {
+                              final currentItem = _data[index];
+                              return ListTile(
+                                leading: ClipRRect(
+                                    borderRadius: BorderRadius.circular(35.0),
+                                    child: CachedNetworkImage(
+                                      imageUrl:
+                                          "${currentItem.imageUrl}?width=100",
+                                      width: 50,
+                                      height: 50,
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) =>
+                                          Container(color: Colors.grey),
+                                      errorWidget: (context, url, error) =>
+                                          Container(color: Colors.grey),
+                                    )),
+                                title: Text(currentItem.name),
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                      DetailsPage.createRoute(currentItem.id));
+                                },
+                              );
+                            }));
   }
 
   /// Fetch calls **********/
   Future<void> _fetchDataForDate(String date) async {
-    setCurrentPageState(ExplorePageState.loading);
+    _setCurrentPageState(ExplorePageState.loading);
 
-    final response = await exploreSearchRepository.fetchSelectedDateItems(date);
+    final response =
+        await _exploreSearchRepository.fetchSelectedDateItems(date);
     if (response is ExploreSearchSuccessResponse) {
       setState(() {
         _data = response.items;
-        currentState = ExplorePageState.calendarMode;
+        _currentState = ExplorePageState.calendarMode;
       });
     } else {
-      setCurrentPageState(ExplorePageState.error);
+      _setCurrentPageState(ExplorePageState.error);
     }
   }
 
   Future<void> _fetchDataForSearch(String keyword) async {
-    setCurrentPageState(ExplorePageState.loading);
+    _setCurrentPageState(ExplorePageState.loading);
 
-    final response = await exploreSearchRepository.fetchSearchItems(keyword);
+    final response = await _exploreSearchRepository.fetchSearchItems(keyword);
     if (response is ExploreSearchSuccessResponse) {
       setState(() {
         _data = response.items;
-        searchMessage = response.message;
-        if(_data.isEmpty){
-          currentState = ExplorePageState.empty;
-        }else{
-          currentState = ExplorePageState.searchMode;
+        _searchMessage = response.message;
+        if (_data.isEmpty) {
+          _currentState = ExplorePageState.empty;
+        } else {
+          _currentState = ExplorePageState.searchMode;
         }
       });
     } else {
-      setCurrentPageState(ExplorePageState.error);
+      _setCurrentPageState(ExplorePageState.error);
     }
   }
 
   /// Helper functions **********/
-  void setCurrentPageState(ExplorePageState state) {
+  void _setCurrentPageState(ExplorePageState state) {
     setState(() {
-      currentState = state;
+      _currentState = state;
     });
   }
 
-  void onCalendarButtonClick() {
+  void _onCalendarButtonClick() {
     _restorableDatePickerRouteFuture.present();
   }
 
-  void onTextChange(String s) {
-    _debounce.run(() {
-      hasTextFieldValue = s.isNotEmpty;
-      if (s.length > 1) {
+  void _onTextChange(String s) {
+    _hasTextFieldValue = s.isNotEmpty;
+    if (s.length > 1) {
+      _debounce.run(() {
         _fetchDataForSearch(s);
-      } else if (s.isEmpty) {
-        setState(() {
-          currentState = ExplorePageState.initial;
-        });
-      }
-    });
+      });
+    } else if (s.isEmpty) {
+      setState(() {
+        _currentState = ExplorePageState.initial;
+      });
+    }
   }
 
-  void onClearTextField() {
-    fieldText.clear();
+  void _onClearTextField() {
+    _fieldText.clear();
     setState(() {
-      currentState = ExplorePageState.initial;
-      hasTextFieldValue = false;
+      _currentState = ExplorePageState.initial;
+      _hasTextFieldValue = false;
       _data = [];
     });
   }
 
-  void onClearDate() {
+  void _onClearDate() {
     setState(() {
-      displayDate = "";
-      currentState = ExplorePageState.initial;
+      _displayDate = "";
+      _currentState = ExplorePageState.initial;
       _data = [];
     });
   }
@@ -212,7 +210,7 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
 
   final RestorableDateTime _selectedDate = RestorableDateTime(DateTime.now());
   late final RestorableRouteFuture<DateTime?> _restorableDatePickerRouteFuture =
-  RestorableRouteFuture<DateTime?>(
+      RestorableRouteFuture<DateTime?>(
     onComplete: _selectDate,
     onPresent: (NavigatorState navigator, Object? arguments) {
       return navigator.restorablePush(
@@ -222,14 +220,14 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
     },
   );
 
-  static Route<DateTime> _datePickerRoute(BuildContext context,
-      Object? arguments,) {
+  static Route<DateTime> _datePickerRoute(
+    BuildContext context,
+    Object? arguments,
+  ) {
     return DialogRoute<DateTime>(
       context: context,
       builder: (BuildContext context) {
-        final thisYear = DateTime
-            .now()
-            .year;
+        final thisYear = DateTime.now().year;
         return DatePickerDialog(
           restorationId: 'date_picker_dialog',
           initialEntryMode: DatePickerEntryMode.calendarOnly,
@@ -243,12 +241,12 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
 
   void _selectDate(DateTime? newSelectedDate) {
     if (newSelectedDate != null) {
-      onClearTextField();
+      _onClearTextField();
       setState(() {
-        displayDate = dateTimeUtil.formatDisplayDateFromDate(newSelectedDate);
+        _displayDate = _dateTimeUtil.formatDisplayDateFromDate(newSelectedDate);
         _selectedDate.value = newSelectedDate;
       });
-      _fetchDataForDate(dateTimeUtil.formatEndpointDate(newSelectedDate));
+      _fetchDataForDate(_dateTimeUtil.formatEndpointDate(newSelectedDate));
     }
   }
 
@@ -265,8 +263,6 @@ class Debounce {
   Timer? _timer;
 
   Debounce({this.milliseconds = 500});
-
-
 
   run(VoidCallback action) {
     if (_timer?.isActive ?? false) {
