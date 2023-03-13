@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:national_calendar_hub_app/color_schemes.g.dart';
 import 'package:national_calendar_hub_app/pages/settings/theme/theme_prefereneces.dart';
 import 'package:national_calendar_hub_app/storage/shared_preferences_manager.dart';
