@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:national_calendar_hub_app/models/national_day.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:national_calendar_hub_app/pages/details/details.dart';
+import 'package:go_router/go_router.dart';
 
 abstract class HomeListItem {
   Widget build(BuildContext context);
@@ -58,7 +59,7 @@ class DayHomeListItem extends StatelessWidget with HomeListItem {
   Widget build(BuildContext context) {
     return InkWell(
         onTap: () {
-          Navigator.of(context).push(DetailsPage.createRoute(id));
+          context.go('/details/$id');
         },
         child: Container(
             margin: const EdgeInsets.only(

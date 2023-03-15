@@ -12,39 +12,17 @@ import 'package:share_plus/share_plus.dart';
 class DetailsPage extends StatefulWidget {
   const DetailsPage({Key? key, required this.id}) : super(key: key);
 
-  static const routeName = '/details';
-
   final String id;
-
-  static Route createRoute(String id) {
-    return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) =>
-          DetailsPage(id: id),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        const begin = Offset(1.0, 0.0);
-        const end = Offset.zero;
-        const curve = Curves.ease;
-
-        var tween =
-            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-        return SlideTransition(
-          position: animation.drive(tween),
-          child: child,
-        );
-      },
-    );
-  }
 
   @override
   State<DetailsPage> createState() => _DetailsPageState();
 }
 
 class _DetailsPageState extends State<DetailsPage> {
-  DateTimeUtil dateTimeUtil = const DateTimeUtil();
-  final DetailsRepository detailsRepository = DetailsRepository();
-  AddEventHelper addEventHelper = AddEventHelper();
-  DetailPageState currentStata = DetailPageState.loading;
+  final DateTimeUtil _dateTimeUtil = const DateTimeUtil();
+  final DetailsRepository _detailsRepository = DetailsRepository();
+  final AddEventHelper _addEventHelper = AddEventHelper();
+  DetailPageState _currentStata = DetailPageState.loading;
   late DetailDayItem _data;
 
   @override
@@ -55,18 +33,18 @@ class _DetailsPageState extends State<DetailsPage> {
 
   void setCurrentPageState(DetailPageState state) {
     setState(() {
-      currentStata = state;
+      _currentStata = state;
     });
   }
 
   Future<void> _fetchData(String id) async {
     setCurrentPageState(DetailPageState.loading);
 
-    final responseData = await detailsRepository.fetchDetails(id);
+    final responseData = await _detailsRepository.fetchDetails(id);
     if (responseData is DetailSuccessResponse) {
       setState(() {
         _data = responseData.data;
-        currentStata = DetailPageState.success;
+        _currentStata = DetailPageState.success;
       });
     } else {
       setCurrentPageState(DetailPageState.error);
@@ -84,9 +62,9 @@ class _DetailsPageState extends State<DetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return currentStata == DetailPageState.loading
-        ? const Scaffold( body: Center(child: CircularProgressIndicator()))
-        : currentStata == DetailPageState.error
+    return _currentStata == DetailPageState.loading
+        ? const Scaffold(body: Center(child: CircularProgressIndicator()))
+        : _currentStata == DetailPageState.error
             ? Scaffold(
                 appBar: AppBar(
                     backgroundColor: Theme.of(context).colorScheme.background),
@@ -97,7 +75,7 @@ class _DetailsPageState extends State<DetailsPage> {
                     actions: <Widget>[
                       IconButton(
                           onPressed: () {
-                            addEventHelper.addToCalendar(
+                            _addEventHelper.addToCalendar(
                                 _data.name, _data.date);
                           },
                           icon: const Icon(Icons.calendar_today)),
@@ -136,7 +114,7 @@ class _DetailsPageState extends State<DetailsPage> {
                                       margin: const EdgeInsets.only(
                                           top: 20.0, bottom: 20.0),
                                       child: Text(
-                                        dateTimeUtil
+                                        _dateTimeUtil
                                             .formatDisplayDate(_data.date),
                                       ))),
                               ClipRRect(

@@ -1,13 +1,14 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:national_calendar_hub_app/models/response/search_response.dart';
 import 'package:national_calendar_hub_app/network/search_repository.dart';
-import 'package:national_calendar_hub_app/pages/details/details.dart';
 import 'package:national_calendar_hub_app/utils/datetime_utils.dart';
 import 'package:national_calendar_hub_app/widgets/empty_state.dart';
 import 'package:national_calendar_hub_app/widgets/error_state.dart';
 import 'package:national_calendar_hub_app/widgets/search_initial_screen.dart';
-import 'dart:async';
 
 class ExploreSearchPage extends StatefulWidget {
   const ExploreSearchPage({Key? key}) : super(key: key);
@@ -23,7 +24,8 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
   final _debounce = Debounce();
   List<ExploreSearchItem> _data = [];
   final DateTimeUtil _dateTimeUtil = const DateTimeUtil();
-  final ExploreSearchRepository _exploreSearchRepository = ExploreSearchRepository();
+  final ExploreSearchRepository _exploreSearchRepository =
+      ExploreSearchRepository();
   final _fieldText = TextEditingController();
   ExplorePageState _currentState = ExplorePageState.initial;
   bool _hasTextFieldValue = false;
@@ -121,8 +123,7 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
                                     )),
                                 title: Text(currentItem.name),
                                 onTap: () {
-                                  Navigator.of(context).push(
-                                      DetailsPage.createRoute(currentItem.id));
+                                  context.go('/details/${currentItem.id}');
                                 },
                               );
                             }));

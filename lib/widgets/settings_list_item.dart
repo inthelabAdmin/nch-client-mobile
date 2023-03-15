@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:national_calendar_hub_app/color_schemes.g.dart';
-import 'package:national_calendar_hub_app/pages/settings/theme/theme_settings_page.dart';
 
 abstract class SettingsListItem {
   Widget build(BuildContext context);
@@ -40,7 +40,7 @@ class SettingsThemeItem extends SettingsListItem {
       title: const Text("Theme"),
       trailing: const Icon(Icons.chevron_right_rounded),
       onTap: () {
-        Navigator.of(context).push(ThemeSettingsPage.createRoute());
+        context.go('/themeSettings');
       },
     );
   }
