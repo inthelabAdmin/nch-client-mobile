@@ -50,7 +50,6 @@ class _HomePageState extends State<HomePage> {
             : Scaffold(
                 body: SafeArea(
                     child: ListView.builder(
-                        physics: const BouncingScrollPhysics(),
                         itemCount: _listItems.length,
                         itemBuilder: (context, index) {
                           return _listItems[index].build(context);

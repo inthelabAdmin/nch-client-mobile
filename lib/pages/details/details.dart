@@ -145,7 +145,7 @@ class _DetailsPageState extends State<DetailsPage> {
                                   )),
                               const Divider(thickness: 1.0),
                               SizedBox(
-                                height: 60.h,
+                                height: 60,
                                 child: ListView(
                                     physics: const BouncingScrollPhysics(),
                                     scrollDirection: Axis.horizontal,

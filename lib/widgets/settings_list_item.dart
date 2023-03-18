@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:national_calendar_hub_app/color_schemes.g.dart';
 
@@ -16,12 +15,12 @@ class SettingHeaderItem extends SettingsListItem {
   Widget build(BuildContext context) {
     return Padding(
       padding:
-          EdgeInsets.only(left: 16.w, right: 18.w, top: 12.h, bottom: 30.h),
+          const EdgeInsets.only(left: 16, right: 18, top: 12, bottom: 30),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(heading,
-              style: TextStyle(fontSize: 30.w, fontWeight: FontWeight.bold)),
+              style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
         ],
       ),
     );

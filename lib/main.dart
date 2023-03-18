@@ -57,16 +57,14 @@ class MyApp extends StatelessWidget {
       create: (context) => themeProvider,
       builder: (context, _) {
         final themeProvider = Provider.of<ThemeProvider>(context);
-        return ScreenUtilInit(
-            designSize: const Size(375, 812),
-            builder: (BuildContext context, child) => MaterialApp.router(
-                  debugShowCheckedModeBanner: false,
-                  title: 'National Calendar Hub',
-                  themeMode: themeProvider.themeMode,
-                  theme: AppThemes.lightTheme,
-                  darkTheme: AppThemes.darkTheme,
-                  routerConfig: _router,
-                ));
+        return MaterialApp.router(
+          debugShowCheckedModeBanner: false,
+          title: 'National Calendar Hub',
+          themeMode: themeProvider.themeMode,
+          theme: AppThemes.lightTheme,
+          darkTheme: AppThemes.darkTheme,
+          routerConfig: _router,
+        );
       });
 }
 

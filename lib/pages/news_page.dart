@@ -1,11 +1,11 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:national_calendar_hub_app/widgets/error_state.dart';
-import 'dart:convert';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:national_calendar_hub_app/utils/network_utils.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:national_calendar_hub_app/widgets/error_state.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NewsPage extends StatefulWidget {
   const NewsPage({Key? key}) : super(key: key);
@@ -84,14 +84,14 @@ class _NewsPageState extends State<NewsPage> {
       final item = _items[index];
       return item is NewsHeaderItem
           ? Padding(
-              padding: EdgeInsets.only(
-                  left: 16.w, right: 18.w, top: 12.h, bottom: 30.h),
+              padding: const EdgeInsets.only(
+                  left: 16, right: 18, top: 12, bottom: 30),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(item.title,
-                      style: TextStyle(
-                          fontSize: 30.w, fontWeight: FontWeight.bold)),
+                      style: const TextStyle(
+                          fontSize: 30, fontWeight: FontWeight.bold)),
                 ],
               ),
             )

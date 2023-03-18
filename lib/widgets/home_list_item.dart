@@ -1,9 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:national_calendar_hub_app/models/national_day.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:national_calendar_hub_app/pages/details/details.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:national_calendar_hub_app/models/national_day.dart';
 
 abstract class HomeListItem {
   Widget build(BuildContext context);
@@ -17,16 +15,17 @@ class HeadingItem extends HomeListItem {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(
-        left: 16.w,
-        right: 18.w,
-        top: 16.h,
+      padding: const EdgeInsets.only(
+        left: 16,
+        right: 18,
+        top: 16,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(heading,
-              style: TextStyle(fontSize: 34.w, fontWeight: FontWeight.bold)),
+              style:
+                  const TextStyle(fontSize: 34, fontWeight: FontWeight.bold)),
         ],
       ),
     );
