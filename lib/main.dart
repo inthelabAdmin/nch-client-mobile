@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:national_calendar_hub_app/pages/details/details.dart';
 import 'package:national_calendar_hub_app/pages/main_navigation_page.dart';
 import 'package:national_calendar_hub_app/provider/theme_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:go_router/go_router.dart';
-
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'pages/settings/theme/theme_settings_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
