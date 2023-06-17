@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:national_calendar_hub_app/color_schemes.g.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 abstract class SettingsListItem {
   Widget build(BuildContext context);
@@ -81,7 +82,18 @@ class SettingsWebLinkItem extends SettingsListItem {
           color: lightColorScheme.primary, AssetImage(leadingAssetPath)),
       title: Text(title),
       trailing: const Icon(Icons.chevron_right_rounded),
-      onTap: () {},
+      onTap: () {
+        _launchURL(url);
+      },
     );
+  }
+
+  _launchURL(String url) async {
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }
