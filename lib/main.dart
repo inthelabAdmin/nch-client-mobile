@@ -32,12 +32,12 @@ class MyApp extends StatelessWidget {
           GoRoute(
               path: 'details/:id',
               builder: (context, state) =>
-                  DetailsPage(id: state.params['id'].toString()),
+                  DetailsPage(id: state.pathParameters['id'].toString()),
               pageBuilder: (context, state) =>
                   buildPageWithDefaultTransition<void>(
                       state: state,
                       context: context,
-                      child: DetailsPage(id: state.params['id'].toString()))),
+                      child: DetailsPage(id: state.pathParameters['id'].toString()))),
           GoRoute(
               path: 'themeSettings',
               builder: (context, state) => const ThemeSettingsPage(),
