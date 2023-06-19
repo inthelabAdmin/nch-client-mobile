@@ -11,6 +11,7 @@ import 'package:national_calendar_hub_app/utils/datetime_utils.dart';
 import 'package:national_calendar_hub_app/widgets/error_state.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class DetailsPage extends StatefulWidget {
   const DetailsPage({Key? key, required this.id}) : super(key: key);
@@ -25,6 +26,7 @@ class _DetailsPageState extends State<DetailsPage> {
   final DateTimeUtil _dateTimeUtil = const DateTimeUtil();
   final DetailsRepository _detailsRepository = DetailsRepository();
   final AddEventHelper _addEventHelper = AddEventHelper();
+  final ANIMATION_DURATION = 500.ms;
   DetailPageState _currentStata = DetailPageState.loading;
   late DetailDayItem _data;
 
@@ -49,8 +51,8 @@ class _DetailsPageState extends State<DetailsPage> {
     });
 
     // Get an inline adaptive size for the current orientation.
-    AdSize size = AdSize.getInlineAdaptiveBannerAdSize(
-        _adWidth.truncate(), 100);
+    AdSize size =
+        AdSize.getInlineAdaptiveBannerAdSize(_adWidth.truncate(), 100);
 
     _inlineAdaptiveAd = BannerAd(
       // TODO: replace this test ad unit with your own ad unit.
@@ -67,7 +69,8 @@ class _DetailsPageState extends State<DetailsPage> {
           BannerAd bannerAd = (ad as BannerAd);
           final AdSize? size = await bannerAd.getPlatformAdSize();
           if (size == null) {
-            debugPrint('Error: getPlatformAdSize() returned null for $bannerAd');
+            debugPrint(
+                'Error: getPlatformAdSize() returned null for $bannerAd');
             return;
           }
 
@@ -95,8 +98,7 @@ class _DetailsPageState extends State<DetailsPage> {
             _adSize != null) {
           return Align(
               child: Container(
-                 margin: const EdgeInsets.only(
-                  top: 24.0, bottom: 24.0),
+            margin: const EdgeInsets.only(top: 24.0, bottom: 24.0),
             width: _adWidth,
             height: _adSize!.height.toDouble(),
             child: AdWidget(
@@ -204,7 +206,9 @@ class _DetailsPageState extends State<DetailsPage> {
                                     style: const TextStyle(
                                         fontSize: 32.0,
                                         fontWeight: FontWeight.bold),
-                                  )),
+                                  ).animate().fade(
+                                      delay: 100.ms,
+                                      duration: ANIMATION_DURATION)),
                               SizedBox(
                                   width: double.infinity,
                                   child: Container(
@@ -213,7 +217,9 @@ class _DetailsPageState extends State<DetailsPage> {
                                       child: Text(
                                         _dateTimeUtil
                                             .formatDisplayDate(_data.date),
-                                      ))),
+                                      ).animate().fade(
+                                          delay: 300.ms,
+                                          duration: ANIMATION_DURATION))),
                               ClipRRect(
                                   borderRadius: BorderRadius.circular(8.0),
                                   child: CachedNetworkImage(
@@ -226,7 +232,9 @@ class _DetailsPageState extends State<DetailsPage> {
                                     ),
                                     errorWidget: (context, url, error) =>
                                         Container(color: Colors.grey),
-                                  )),
+                                  ).animate().fade(
+                                      delay: 400.ms,
+                                      duration: ANIMATION_DURATION)),
                               SizedBox(
                                   width: double.infinity,
                                   child: Container(
@@ -238,7 +246,9 @@ class _DetailsPageState extends State<DetailsPage> {
                                           fontSize: 17.0,
                                           height: 1.5,
                                           letterSpacing: 0.5),
-                                    ),
+                                    ).animate().fade(
+                                        delay: 500.ms,
+                                        duration: ANIMATION_DURATION),
                                   )),
                               const Divider(thickness: 1.0),
                               SizedBox(
