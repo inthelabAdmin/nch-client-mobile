@@ -75,6 +75,7 @@ class _NewsPageState extends State<NewsPage> {
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri);
     } else {
+      // TODO Show error
       throw 'Could not launch $url';
     }
   }
@@ -133,7 +134,7 @@ class _NewsPageState extends State<NewsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: SafeArea(
-            child: _currentPageState == NewsPageState.loading
+            child: _currentPageState == NewsPageState.initial
                 ? const Center(
                     child: CircularProgressIndicator(),
                   )
