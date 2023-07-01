@@ -10,10 +10,26 @@ import 'pages/settings/theme/theme_settings_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Mobile Ads Set up
   MobileAds.instance.initialize();
+  MobileAds.instance.updateRequestConfiguration(
+      RequestConfiguration(testDeviceIds: ["GADSimulatorID"]));
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
+
+  // Work around for Android Status bar in light mode
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle(
+      statusBarIconBrightness:
+      WidgetsBinding.instance.platformDispatcher.platformBrightness ==
+          Brightness.light
+          ? Brightness.dark
+          : Brightness.light,
+    ),
+  );
+  // Set theme
   final themeProvider = ThemeProvider();
   await themeProvider.fetchSavedTheme();
   runApp(MyApp(themeProvider: themeProvider));
@@ -37,7 +53,8 @@ class MyApp extends StatelessWidget {
                   buildPageWithDefaultTransition<void>(
                       state: state,
                       context: context,
-                      child: DetailsPage(id: state.pathParameters['id'].toString()))),
+                      child: DetailsPage(
+                          id: state.pathParameters['id'].toString()))),
           GoRoute(
               path: 'themeSettings',
               builder: (context, state) => const ThemeSettingsPage(),
