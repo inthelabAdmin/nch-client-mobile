@@ -15,13 +15,13 @@ class SettingHeaderItem extends SettingsListItem {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:
-          const EdgeInsets.only(left: 16, right: 18, top: 12, bottom: 30),
+      padding: const EdgeInsets.only(left: 16, right: 18, top: 12, bottom: 30),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(heading,
-              style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+              style:
+                  const TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
         ],
       ),
     );
@@ -83,17 +83,26 @@ class SettingsWebLinkItem extends SettingsListItem {
       title: Text(title),
       trailing: const Icon(Icons.chevron_right_rounded),
       onTap: () {
-        _launchURL(url);
+        _launchURL(context, url);
       },
     );
   }
 
-  _launchURL(String url) async {
+  _showSnackBar(BuildContext context) {
+    const snackBar =  SnackBar(
+      content: Text('Unable to open email app. Please try again'),
+      duration: Duration(milliseconds: 1500),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  _launchURL(BuildContext context, String url) async {
     final uri = Uri.parse(url);
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri);
     } else {
-      throw 'Could not launch $url';
+      //throw 'Could not launch $url';
+      _showSnackBar(context);
     }
   }
 }
