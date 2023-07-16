@@ -47,87 +47,93 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
   @override
   Widget build(BuildContext context) {
     final ColorScheme colors = Theme.of(context).colorScheme;
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: colors.background,
-          title: SizedBox(
-            width: double.infinity,
-            height: 40,
-            child: Center(
-              child: TextField(
-                enabled: _currentState != ExplorePageState.calendarMode,
-                onChanged: _onTextChange,
-                textInputAction: TextInputAction.search,
-                controller: _fieldText,
-                decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.only(
-                        left: 5.0, right: 5.0, top: 5.0, bottom: 5.0),
-                    prefixIcon: const Icon(Icons.search),
-                    suffixIcon: _hasTextFieldValue
-                        ? IconButton(
-                            icon: const Icon(Icons.clear),
-                            onPressed: _onClearTextField,
-                          )
-                        : null,
-                    hintText: 'Search...',
-                    border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(20)))),
+    return GestureDetector(
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: colors.background,
+              title: SizedBox(
+                width: double.infinity,
+                height: 40,
+                child: Center(
+                  child: TextField(
+                    enabled: _currentState != ExplorePageState.calendarMode,
+                    onChanged: _onTextChange,
+                    textInputAction: TextInputAction.search,
+                    controller: _fieldText,
+                    decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.only(
+                            left: 5.0, right: 5.0, top: 5.0, bottom: 5.0),
+                        prefixIcon: const Icon(Icons.search),
+                        suffixIcon: _hasTextFieldValue
+                            ? IconButton(
+                                icon: const Icon(Icons.clear),
+                                onPressed: _onClearTextField,
+                              )
+                            : null,
+                        hintText: 'Search...',
+                        border: const OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20)))),
+                  ),
+                ),
               ),
+              actions: [
+                Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
+                    child: _currentState == ExplorePageState.calendarMode
+                        ? InputChip(
+                            label: Text(_displayDate),
+                            onDeleted: _onClearDate,
+                          )
+                        : null),
+                Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 16, 0),
+                    child: IconButton(
+                        icon: const Icon(Icons.calendar_month_rounded),
+                        onPressed: _onCalendarButtonClick,
+                        style: IconButton.styleFrom(
+                            focusColor:
+                                colors.onSurfaceVariant.withOpacity(0.12),
+                            highlightColor: colors.onSurface.withOpacity(0.12),
+                            side: BorderSide(color: colors.outline))))
+              ],
             ),
-          ),
-          actions: [
-            Padding(
-                padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
-                child: _currentState == ExplorePageState.calendarMode
-                    ? InputChip(
-                        label: Text(_displayDate),
-                        onDeleted: _onClearDate,
-                      )
-                    : null),
-            Padding(
-                padding: const EdgeInsets.fromLTRB(0, 0, 16, 0),
-                child: IconButton(
-                    icon: const Icon(Icons.calendar_month_rounded),
-                    onPressed: _onCalendarButtonClick,
-                    style: IconButton.styleFrom(
-                        focusColor: colors.onSurfaceVariant.withOpacity(0.12),
-                        highlightColor: colors.onSurface.withOpacity(0.12),
-                        side: BorderSide(color: colors.outline))))
-          ],
-        ),
-        body: _currentState == ExplorePageState.initial
-            ? const Center(child: SearchInitialPage())
-            : _currentState == ExplorePageState.loading
-                ? const Center(child: CircularProgressIndicator())
-                : _currentState == ExplorePageState.error
-                    ? const Center(child: ErrorState())
-                    : _currentState == ExplorePageState.empty
-                        ? EmptyState(headerTitle: _searchMessage)
-                        : ListView.builder(
-                            physics: const BouncingScrollPhysics(),
-                            itemCount: _data.length,
-                            itemBuilder: (context, index) {
-                              final currentItem = _data[index];
-                              return ListTile(
-                                leading: ClipRRect(
-                                    borderRadius: BorderRadius.circular(35.0),
-                                    child: CachedNetworkImage(
-                                      imageUrl:
-                                          "${currentItem.imageUrl}?width=100",
-                                      width: 50,
-                                      height: 50,
-                                      fit: BoxFit.cover,
-                                      placeholder: (context, url) =>
-                                          Container(color: Colors.grey),
-                                      errorWidget: (context, url, error) =>
-                                          Container(color: Colors.grey),
-                                    )),
-                                title: Text(currentItem.name),
-                                onTap: () {
-                                  context.go('/details/${currentItem.id}');
-                                },
-                              );
-                            }));
+            body: _currentState == ExplorePageState.initial
+                ? const Center(child: SearchInitialPage())
+                : _currentState == ExplorePageState.loading
+                    ? const Center(child: CircularProgressIndicator())
+                    : _currentState == ExplorePageState.error
+                        ? const Center(child: ErrorState())
+                        : _currentState == ExplorePageState.empty
+                            ? EmptyState(headerTitle: _searchMessage)
+                            : ListView.builder(
+                                physics: const BouncingScrollPhysics(),
+                                itemCount: _data.length,
+                                itemBuilder: (context, index) {
+                                  final currentItem = _data[index];
+                                  return ListTile(
+                                    leading: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(35.0),
+                                        child: CachedNetworkImage(
+                                          imageUrl:
+                                              "${currentItem.imageUrl}?width=100",
+                                          width: 50,
+                                          height: 50,
+                                          fit: BoxFit.cover,
+                                          placeholder: (context, url) =>
+                                              Container(color: Colors.grey),
+                                          errorWidget: (context, url, error) =>
+                                              Container(color: Colors.grey),
+                                        )),
+                                    title: Text(currentItem.name),
+                                    onTap: () {
+                                      FocusManager.instance.primaryFocus?.unfocus();
+                                      context.go('/details/${currentItem.id}');
+                                    },
+                                  );
+                                })));
   }
 
   /// Fetch calls **********/
@@ -162,7 +168,8 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
         }
       });
     } else {
-      FirebaseCrashlytics.instance.log("Error loading data for keyword: $keyword");
+      FirebaseCrashlytics.instance
+          .log("Error loading data for keyword: $keyword");
       _setCurrentPageState(ExplorePageState.error);
     }
   }
