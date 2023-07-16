@@ -1,8 +1,13 @@
 import 'datetime_utils.dart';
+import 'package:flutter/foundation.dart';
 
 class NetworkUtils {
   final DateTimeUtil dateTimeUtil = const DateTimeUtil();
-  final String _baseUrl = "https://dev-nca-client-be.herokuapp.com/api/v2";
+
+  static const String _devEndpoint = "https://dev-nca-client-be.herokuapp.com/api/v2";
+  static const String _prodEndpoint = "https://api-nationalcalendarhub-840f979bf501.herokuapp.com/api/v2";
+
+  static const String _baseUrl = kReleaseMode?_prodEndpoint:_devEndpoint;
 
   const NetworkUtils();
 
