@@ -1,17 +1,17 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:national_calendar_hub_app/models/detail_day_item.dart';
 import 'package:national_calendar_hub_app/network/details_repository.dart';
 import 'package:national_calendar_hub_app/pages/details/hashtag_dialog.dart';
+import 'package:national_calendar_hub_app/utils/ad_helper.dart';
 import 'package:national_calendar_hub_app/utils/add_event_helper.dart';
 import 'package:national_calendar_hub_app/utils/datetime_utils.dart';
 import 'package:national_calendar_hub_app/widgets/error_state.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 
 class DetailsPage extends StatefulWidget {
   const DetailsPage({Key? key, required this.id}) : super(key: key);
@@ -24,9 +24,9 @@ class DetailsPage extends StatefulWidget {
 
 class _DetailsPageState extends State<DetailsPage> {
   final DateTimeUtil _dateTimeUtil = const DateTimeUtil();
+  final AdHelperUtils _adHelper = const AdHelperUtils();
   final DetailsRepository _detailsRepository = DetailsRepository();
   final AddEventHelper _addEventHelper = AddEventHelper();
-  final ANIMATION_DURATION = 500.ms;
   DetailPageState _currentStata = DetailPageState.loading;
   late DetailDayItem _data;
 
@@ -38,10 +38,6 @@ class _DetailsPageState extends State<DetailsPage> {
   late Orientation _currentOrientation;
 
   double get _adWidth => MediaQuery.of(context).size.width - (2 * _insets);
-
-  final adUnitId = Platform.isAndroid
-      ? 'ca-app-pub-3940256099942544/6300978111'
-      : 'ca-app-pub-3940256099942544/2934735716';
 
   void _loadAd() async {
     await _inlineAdaptiveAd?.dispose();
@@ -55,8 +51,7 @@ class _DetailsPageState extends State<DetailsPage> {
         AdSize.getInlineAdaptiveBannerAdSize(_adWidth.truncate(), 100);
 
     _inlineAdaptiveAd = BannerAd(
-      // TODO: replace this test ad unit with your own ad unit.
-      adUnitId: 'ca-app-pub-3940256099942544/9214589741',
+      adUnitId: _adHelper.getDetailsBannerAdUnitId(),
       size: size,
       request: const AdRequest(),
       listener: BannerAdListener(
@@ -120,14 +115,18 @@ class _DetailsPageState extends State<DetailsPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _currentOrientation = MediaQuery.of(context).orientation;
-    _loadAd();
   }
 
   @override
   void initState() {
     super.initState();
     _fetchData(widget.id);
-    _loadAd();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _inlineAdaptiveAd?.dispose();
   }
 
   void setCurrentPageState(DetailPageState state) {
@@ -145,6 +144,7 @@ class _DetailsPageState extends State<DetailsPage> {
         _data = responseData.data;
         _currentStata = DetailPageState.success;
       });
+      _loadAd();
     } else {
       setCurrentPageState(DetailPageState.error);
     }
@@ -206,9 +206,7 @@ class _DetailsPageState extends State<DetailsPage> {
                                     style: const TextStyle(
                                         fontSize: 32.0,
                                         fontWeight: FontWeight.bold),
-                                  ).animate().fade(
-                                      delay: 100.ms,
-                                      duration: ANIMATION_DURATION)),
+                                  )),
                               SizedBox(
                                   width: double.infinity,
                                   child: Container(
@@ -217,9 +215,7 @@ class _DetailsPageState extends State<DetailsPage> {
                                       child: Text(
                                         _dateTimeUtil
                                             .formatDisplayDate(_data.date),
-                                      ).animate().fade(
-                                          delay: 300.ms,
-                                          duration: ANIMATION_DURATION))),
+                                      ))),
                               ClipRRect(
                                   borderRadius: BorderRadius.circular(8.0),
                                   child: CachedNetworkImage(
@@ -232,24 +228,19 @@ class _DetailsPageState extends State<DetailsPage> {
                                     ),
                                     errorWidget: (context, url, error) =>
                                         Container(color: Colors.grey),
-                                  ).animate().fade(
-                                      delay: 400.ms,
-                                      duration: ANIMATION_DURATION)),
+                                  )),
                               SizedBox(
                                   width: double.infinity,
                                   child: Container(
-                                    margin: const EdgeInsets.only(
-                                        top: 24.0, bottom: 10.0),
-                                    child: Text(
-                                      _data.description,
-                                      style: const TextStyle(
-                                          fontSize: 17.0,
-                                          height: 1.5,
-                                          letterSpacing: 0.5),
-                                    ).animate().fade(
-                                        delay: 500.ms,
-                                        duration: ANIMATION_DURATION),
-                                  )),
+                                      margin: const EdgeInsets.only(
+                                          top: 24.0, bottom: 10.0),
+                                      child: Text(
+                                        _data.description,
+                                        style: const TextStyle(
+                                            fontSize: 17.0,
+                                            height: 1.5,
+                                            letterSpacing: 0.5),
+                                      ))),
                               const Divider(thickness: 1.0),
                               SizedBox(
                                 height: 60,
