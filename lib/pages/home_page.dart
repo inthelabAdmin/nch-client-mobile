@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:national_calendar_hub_app/network/home_repository.dart';
 import 'package:national_calendar_hub_app/widgets/error_state.dart';
@@ -31,6 +32,7 @@ class _HomePageState extends State<HomePage> {
         _currentPageState = HomePageState.success;
       });
     } else {
+      FirebaseCrashlytics.instance.log("Could not load home page");
       setCurrentPageState(HomePageState.error);
     }
   }

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:national_calendar_hub_app/models/detail_day_item.dart';
@@ -64,8 +65,10 @@ class _DetailsPageState extends State<DetailsPage> {
           BannerAd bannerAd = (ad as BannerAd);
           final AdSize? size = await bannerAd.getPlatformAdSize();
           if (size == null) {
-            debugPrint(
-                'Error: getPlatformAdSize() returned null for $bannerAd');
+            final errorMessage =
+                "Error: getPlatformAdSize() returned null for $bannerAd";
+            debugPrint(errorMessage);
+            FirebaseCrashlytics.instance.log(errorMessage);
             return;
           }
 
@@ -76,7 +79,9 @@ class _DetailsPageState extends State<DetailsPage> {
           });
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
-          debugPrint('Inline adaptive banner failedToLoad: $error');
+          final errorMessage = 'Inline adaptive banner failedToLoad: $error';
+          debugPrint(errorMessage);
+          FirebaseCrashlytics.instance.log(errorMessage);
           ad.dispose();
         },
       ),
@@ -146,6 +151,8 @@ class _DetailsPageState extends State<DetailsPage> {
       });
       _loadAd();
     } else {
+      FirebaseCrashlytics.instance
+          .log("Could not load details page for id $id");
       setCurrentPageState(DetailPageState.error);
     }
   }

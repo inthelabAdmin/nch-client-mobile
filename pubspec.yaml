@@ -49,6 +49,8 @@ dependencies:
   go_router: ^8.0.5
   google_mobile_ads: ^3.0.0
   flutter_animate: ^4.1.1+1
+  firebase_core: ^2.15.0
+  firebase_crashlytics: ^3.3.4
 
 dev_dependencies:
   flutter_test:

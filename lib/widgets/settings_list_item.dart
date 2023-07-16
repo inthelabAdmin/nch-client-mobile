@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:national_calendar_hub_app/color_schemes.g.dart';
@@ -89,7 +90,7 @@ class SettingsWebLinkItem extends SettingsListItem {
   }
 
   _showSnackBar(BuildContext context) {
-    const snackBar =  SnackBar(
+    const snackBar = SnackBar(
       content: Text('Unable to open email app. Please try again'),
       duration: Duration(milliseconds: 1500),
     );
@@ -101,8 +102,8 @@ class SettingsWebLinkItem extends SettingsListItem {
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri);
     } else {
-      //throw 'Could not launch $url';
       _showSnackBar(context);
+      FirebaseCrashlytics.instance.log("Could not launch email client");
     }
   }
 }

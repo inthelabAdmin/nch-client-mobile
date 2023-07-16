@@ -1,6 +1,47 @@
 PODS:
   - add_2_calendar (0.0.1):
     - Flutter
+  - Firebase/CoreOnly (10.12.0):
+    - FirebaseCore (= 10.12.0)
+  - Firebase/Crashlytics (10.12.0):
+    - Firebase/CoreOnly
+    - FirebaseCrashlytics (~> 10.12.0)
+  - firebase_core (2.15.0):
+    - Firebase/CoreOnly (= 10.12.0)
+    - Flutter
+  - firebase_crashlytics (3.3.4):
+    - Firebase/Crashlytics (= 10.12.0)
+    - firebase_core
+    - Flutter
+  - FirebaseCore (10.12.0):
+    - FirebaseCoreInternal (~> 10.0)
+    - GoogleUtilities/Environment (~> 7.8)
+    - GoogleUtilities/Logger (~> 7.8)
+  - FirebaseCoreExtension (10.12.0):
+    - FirebaseCore (~> 10.0)
+  - FirebaseCoreInternal (10.12.0):
+    - "GoogleUtilities/NSData+zlib (~> 7.8)"
+  - FirebaseCrashlytics (10.12.0):
+    - FirebaseCore (~> 10.5)
+    - FirebaseInstallations (~> 10.0)
+    - FirebaseSessions (~> 10.5)
+    - GoogleDataTransport (~> 9.2)
+    - GoogleUtilities/Environment (~> 7.8)
+    - nanopb (< 2.30910.0, >= 2.30908.0)
+    - PromisesObjC (~> 2.1)
+  - FirebaseInstallations (10.12.0):
+    - FirebaseCore (~> 10.0)
+    - GoogleUtilities/Environment (~> 7.8)
+    - GoogleUtilities/UserDefaults (~> 7.8)
+    - PromisesObjC (~> 2.1)
+  - FirebaseSessions (10.12.0):
+    - FirebaseCore (~> 10.5)
+    - FirebaseCoreExtension (~> 10.0)
+    - FirebaseInstallations (~> 10.0)
+    - GoogleDataTransport (~> 9.2)
+    - GoogleUtilities/Environment (~> 7.10)
+    - nanopb (< 2.30910.0, >= 2.30908.0)
+    - PromisesSwift (~> 2.1)
   - Flutter (1.0.0)
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
@@ -32,6 +73,10 @@ PODS:
     - GoogleUtilities/Network (~> 7.11)
     - "GoogleUtilities/NSData+zlib (~> 7.11)"
     - nanopb (< 2.30910.0, >= 2.30908.0)
+  - GoogleDataTransport (9.2.3):
+    - GoogleUtilities/Environment (~> 7.7)
+    - nanopb (< 2.30910.0, >= 2.30908.0)
+    - PromisesObjC (< 3.0, >= 1.2)
   - GoogleUserMessagingPlatform (2.0.1)
   - GoogleUtilities/AppDelegateSwizzler (7.11.1):
     - GoogleUtilities/Environment
@@ -50,6 +95,8 @@ PODS:
   - "GoogleUtilities/NSData+zlib (7.11.1)"
   - GoogleUtilities/Reachability (7.11.1):
     - GoogleUtilities/Logger
+  - GoogleUtilities/UserDefaults (7.11.1):
+    - GoogleUtilities/Logger
   - nanopb (2.30909.0):
     - nanopb/decode (= 2.30909.0)
     - nanopb/encode (= 2.30909.0)
@@ -59,6 +106,8 @@ PODS:
     - Flutter
     - FlutterMacOS
   - PromisesObjC (2.2.0)
+  - PromisesSwift (2.2.0):
+    - PromisesObjC (= 2.2.0)
   - share_plus (0.0.1):
     - Flutter
   - shared_preferences_foundation (0.0.1):
@@ -74,6 +123,8 @@ PODS:
 
 DEPENDENCIES:
   - add_2_calendar (from `.symlinks/plugins/add_2_calendar/ios`)
+  - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
+  - firebase_crashlytics (from `.symlinks/plugins/firebase_crashlytics/ios`)
   - Flutter (from `Flutter`)
   - google_mobile_ads (from `.symlinks/plugins/google_mobile_ads/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
@@ -85,17 +136,30 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - Firebase
+    - FirebaseCore
+    - FirebaseCoreExtension
+    - FirebaseCoreInternal
+    - FirebaseCrashlytics
+    - FirebaseInstallations
+    - FirebaseSessions
     - FMDB
     - Google-Mobile-Ads-SDK
     - GoogleAppMeasurement
+    - GoogleDataTransport
     - GoogleUserMessagingPlatform
     - GoogleUtilities
     - nanopb
     - PromisesObjC
+    - PromisesSwift
 
 EXTERNAL SOURCES:
   add_2_calendar:
     :path: ".symlinks/plugins/add_2_calendar/ios"
+  firebase_core:
+    :path: ".symlinks/plugins/firebase_core/ios"
+  firebase_crashlytics:
+    :path: ".symlinks/plugins/firebase_crashlytics/ios"
   Flutter:
     :path: Flutter
   google_mobile_ads:
@@ -115,16 +179,27 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   add_2_calendar: e9d68636aed37fb18e12f5a3d74c2e0589487af0
+  Firebase: 07150e75d142fb9399f6777fa56a187b17f833a0
+  firebase_core: e477125798fc37cd4ab43ca6a8536bf7e0929c00
+  firebase_crashlytics: 6043ce85800f96e53f15ee5051f9cfad10cce73d
+  FirebaseCore: f86a1394906b97ac445ae49c92552a9425831bed
+  FirebaseCoreExtension: 0ce5ac36042001cfa233ce7bfa28e5c313cf80f4
+  FirebaseCoreInternal: 950500ad8a08963657f6d8c67b579740c06d6aa1
+  FirebaseCrashlytics: c4d111b7430c49744c74bcc6346ea00868661ac8
+  FirebaseInstallations: 7b99ef103f013624444c614397038219c45f8e63
+  FirebaseSessions: a4ee211eeb31a2224cd8d9d4e30a0fccde9aa00c
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   Google-Mobile-Ads-SDK: 32fe7836431a06a29f7734ae092b600137c8108d
   google_mobile_ads: 53b1f0d74445963e5810e34ac38dfb27aabe278e
   GoogleAppMeasurement: d3dabccdb336fc0ae44b633c8abaa26559893cd9
+  GoogleDataTransport: f0308f5905a745f94fb91fea9c6cbaf3831cb1bd
   GoogleUserMessagingPlatform: 5f8b30daf181805317b6b985bb51c1ff3beca054
   GoogleUtilities: 9aa0ad5a7bc171f8bae016300bfcfa3fb8425749
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   path_provider_foundation: eaf5b3e458fc0e5fbb9940fb09980e853fe058b8
   PromisesObjC: 09985d6d70fbe7878040aa746d78236e6946d2ef
+  PromisesSwift: cf9eb58666a43bbe007302226e510b16c1e10959
   share_plus: 599aa54e4ea31d4b4c0e9c911bcc26c55e791028
   shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
   sqflite: 31f7eba61e3074736dff8807a9b41581e4f7f15a

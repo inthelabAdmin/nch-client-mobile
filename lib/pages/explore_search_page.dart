@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:national_calendar_hub_app/models/response/search_response.dart';
@@ -141,6 +142,7 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
         _currentState = ExplorePageState.calendarMode;
       });
     } else {
+      FirebaseCrashlytics.instance.log("Error loading data for date: $date");
       _setCurrentPageState(ExplorePageState.error);
     }
   }
@@ -160,6 +162,7 @@ class _ExploreSearchPageState extends State<ExploreSearchPage>
         }
       });
     } else {
+      FirebaseCrashlytics.instance.log("Error loading data for keyword: $keyword");
       _setCurrentPageState(ExplorePageState.error);
     }
   }

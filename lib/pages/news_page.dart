@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:national_calendar_hub_app/utils/network_utils.dart';
@@ -49,7 +50,7 @@ class _NewsPageState extends State<NewsPage> {
     if (_currentPageState == NewsPageState.loading) return;
 
     _updatePageState(NewsPageState.loading);
-    
+
     try {
       final response =
           await http.get(Uri.parse(_networkUtils.getArticlesUrl(_page)));
@@ -66,6 +67,7 @@ class _NewsPageState extends State<NewsPage> {
         _updatePageState(NewsPageState.error);
       }
     } catch (e) {
+      FirebaseCrashlytics.instance.log("Error loading news with exception: $e");
       _updatePageState(NewsPageState.error);
     }
   }
