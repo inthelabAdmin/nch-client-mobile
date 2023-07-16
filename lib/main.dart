@@ -34,8 +34,8 @@ void main() async {
 
   // Mobile Ads Set up
   MobileAds.instance.initialize();
-  MobileAds.instance.updateRequestConfiguration(
-      RequestConfiguration(testDeviceIds: ["GADSimulatorID"]));
+  MobileAds.instance.updateRequestConfiguration(RequestConfiguration(
+      testDeviceIds: ["GADSimulatorID", "01344091a64d229e66a9004a66ae58e4"]));
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
@@ -44,10 +44,10 @@ void main() async {
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
       statusBarIconBrightness:
-      WidgetsBinding.instance.platformDispatcher.platformBrightness ==
-          Brightness.light
-          ? Brightness.dark
-          : Brightness.light,
+          WidgetsBinding.instance.platformDispatcher.platformBrightness ==
+                  Brightness.light
+              ? Brightness.dark
+              : Brightness.light,
     ),
   );
   // Set theme
