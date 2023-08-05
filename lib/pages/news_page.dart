@@ -72,14 +72,29 @@ class _NewsPageState extends State<NewsPage> {
     }
   }
 
-  _launchURL(String url) async {
+  _launchURL(BuildContext context, String url) async {
     final uri = Uri.parse(url);
+
     if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
+      try {
+        await launchUrl(uri);
+      } catch (e) {
+        _showSnackBar(context);
+        FirebaseCrashlytics.instance
+            .log("Could not launch news with exception $e");
+      }
     } else {
-      // TODO Show error
-      throw 'Could not launch $url';
+      _showSnackBar(context);
+      FirebaseCrashlytics.instance.log("Could not launch news url $url");
     }
+  }
+
+  _showSnackBar(BuildContext context) {
+    const snackBar = SnackBar(
+      content: Text('Cannot detect any web browsers. Please try again'),
+      duration: Duration(milliseconds: 1500),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   Widget _buildListItem(BuildContext context, int index) {
@@ -100,7 +115,7 @@ class _NewsPageState extends State<NewsPage> {
             )
           : ListTile(
               onTap: () {
-                _launchURL(item["link"]);
+                _launchURL(context, item["link"]);
               },
               leading: ClipRRect(
                   borderRadius: BorderRadius.circular(10.0),
