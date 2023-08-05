@@ -8,8 +8,8 @@ class AdHelperUtils {
   static const _prodAndroidAdUnitId = "ca-app-pub-8426510967287255/6274114059";
   static const _prodAppleAdUnitId = "ca-app-pub-8426510967287255/6089963996";
 
-  static const _debugAndroidAdUnitId = "ca-app-pub-8426510967287255/6274114059";
-  static const _debugAppleAdUnitId = "ca-app-pub-8426510967287255/6089963996";
+  static const _debugAndroidAdUnitId = "ca-app-pub-3940256099942544/6300978111";
+  static const _debugAppleAdUnitId = "ca-app-pub-3940256099942544/2934735716";
 
   static const _androidAdUnitId =
       kReleaseMode ? _prodAndroidAdUnitId : _debugAndroidAdUnitId;
