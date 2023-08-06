@@ -1,1 +1,1 @@
-enum ThemeSetting { SYSTEM, LIGHT, DARK }
+enum ThemeSetting { system, light, dark }

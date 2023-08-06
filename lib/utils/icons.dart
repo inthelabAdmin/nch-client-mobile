@@ -10,7 +10,7 @@ class SvgIconAssets {
   Map<AssetName, String> assets = {
     AssetName.search: "assets/icons/search.svg",
     AssetName.share: "assets/icons/share.svg",
-    AssetName.favorite_unselected: "assets/icons/favorite_unselected.svg",
+    AssetName.favoriteUnselected: "assets/icons/favorite_unselected.svg",
     AssetName.facebook: "assets/icons/facebook.svg",
     AssetName.instagram: "assets/icons/instagram.svg",
     AssetName.twitter: "assets/icons/twitter.svg"
@@ -20,7 +20,7 @@ class SvgIconAssets {
 enum AssetName {
   search,
   share,
-  favorite_unselected,
+  favoriteUnselected,
   facebook,
   instagram,
   twitter

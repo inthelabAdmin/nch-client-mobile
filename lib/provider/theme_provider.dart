@@ -8,7 +8,7 @@ class ThemeProvider extends ChangeNotifier {
 
   Future<void> fetchSavedTheme() async {
     int savedTheme =
-        await SharedPrefsManager.getInt(ThemePreferences.KEY_PREF_THEME) ?? 0;
+        await SharedPrefsManager.getInt(ThemePreferences.keyPrefTheme) ?? 0;
     setTheme(savedTheme);
   }
 

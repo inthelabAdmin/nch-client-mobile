@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class EmptyState extends StatelessWidget {
-   const EmptyState({Key? key, required this.headerTitle, this.subtitle}) : super(key: key);
+  const EmptyState({Key? key, required this.headerTitle, this.subtitle})
+      : super(key: key);
   final String headerTitle;
   final String? subtitle;
 
@@ -10,12 +11,12 @@ class EmptyState extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(top: 16.0, bottom: 10.0),
       child: Center(
-        heightFactor: 1.0 ,
+        heightFactor: 1.0,
         child: Column(
           children: [
             Text(
               headerTitle,
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: FontWeight.bold),
             )
           ],
         ),

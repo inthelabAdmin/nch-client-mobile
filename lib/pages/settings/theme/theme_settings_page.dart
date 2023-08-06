@@ -44,18 +44,18 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
 
   Future<void> _fetchSavedTheme() async {
     int savedTheme =
-        await SharedPrefsManager.getInt(ThemePreferences.KEY_PREF_THEME) ?? 0;
+        await SharedPrefsManager.getInt(ThemePreferences.keyPrefTheme) ?? 0;
 
     setState(() {
       switch (savedTheme) {
         case 1:
-          _themeSetting = ThemeSetting.LIGHT;
+          _themeSetting = ThemeSetting.light;
           break;
         case 2:
-          _themeSetting = ThemeSetting.DARK;
+          _themeSetting = ThemeSetting.dark;
           break;
         default:
-          _themeSetting = ThemeSetting.SYSTEM;
+          _themeSetting = ThemeSetting.system;
       }
     });
   }
@@ -80,7 +80,7 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
               ListTile(
                 title: const Text('System'),
                 leading: Radio<ThemeSetting>(
-                  value: ThemeSetting.SYSTEM,
+                  value: ThemeSetting.system,
                   groupValue: _themeSetting,
                   onChanged: (ThemeSetting? value) {
                     setState(() {
@@ -93,7 +93,7 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
               ListTile(
                 title: const Text('Light'),
                 leading: Radio<ThemeSetting>(
-                  value: ThemeSetting.LIGHT,
+                  value: ThemeSetting.light,
                   groupValue: _themeSetting,
                   onChanged: (ThemeSetting? value) {
                     setState(() {
@@ -106,7 +106,7 @@ class _ThemeSettingsPageState extends State<ThemeSettingsPage> {
               ListTile(
                 title: const Text('Dark'),
                 leading: Radio<ThemeSetting>(
-                  value: ThemeSetting.DARK,
+                  value: ThemeSetting.dark,
                   groupValue: _themeSetting,
                   onChanged: (ThemeSetting? value) {
                     setState(() {

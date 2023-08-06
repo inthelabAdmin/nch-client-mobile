@@ -5,14 +5,11 @@ class ErrorState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
-        Text("Whoops! Something went wrong.",
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-          Text("Please try again.")
-        ]
-    ));
+    return const SafeArea(
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+      Text("Whoops! Something went wrong.",
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+      Text("Please try again.")
+    ]));
   }
 }

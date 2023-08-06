@@ -89,7 +89,7 @@ class _NewsPageState extends State<NewsPage> {
     }
   }
 
-  _showSnackBar(BuildContext context) {
+  _showSnackBar(BuildContext context)  {
     const snackBar = SnackBar(
       content: Text('Cannot detect any web browsers. Please try again'),
       duration: Duration(milliseconds: 1500),

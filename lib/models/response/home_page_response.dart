@@ -1,5 +1,4 @@
 import 'package:national_calendar_hub_app/models/national_day.dart';
-import 'package:national_calendar_hub_app/utils/icons.dart';
 import 'package:national_calendar_hub_app/widgets/home_list_item.dart';
 
 class HomePageResponse {

@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:national_calendar_hub_app/widgets/settings_list_item.dart';
 
 class SettingsListCreator {

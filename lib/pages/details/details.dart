@@ -1,9 +1,7 @@
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:national_calendar_hub_app/models/detail_day_item.dart';
 import 'package:national_calendar_hub_app/network/details_repository.dart';
 import 'package:national_calendar_hub_app/pages/details/hashtag_dialog.dart';
@@ -12,7 +10,6 @@ import 'package:national_calendar_hub_app/utils/add_event_helper.dart';
 import 'package:national_calendar_hub_app/utils/datetime_utils.dart';
 import 'package:national_calendar_hub_app/widgets/error_state.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class DetailsPage extends StatefulWidget {
   const DetailsPage({Key? key, required this.id}) : super(key: key);
