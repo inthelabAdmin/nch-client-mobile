@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "191665922911",
+    "project_id": "national-calendar-hub",
+    "storage_bucket": "national-calendar-hub.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:191665922911:android:4114c40171c23277f14cea",
+        "android_client_info": {
+          "package_name": "com.nationalcalendarhub.mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "191665922911-hpflijcg0phtfl9j1t6qk6d8c914nq50.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJHFdQuMaYbbrS-i1g0v8jBZh8-0po-b8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "191665922911-hpflijcg0phtfl9j1t6qk6d8c914nq50.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "191665922911-7f8bmmnubtm8llgrrcrrs9762bhp0pft.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.nationalcalendarhub.mobile"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
