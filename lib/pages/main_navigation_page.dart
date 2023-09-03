@@ -29,9 +29,18 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
   @override
   void initState() {
     super.initState();
-
     const QuickActions quickActions = QuickActions();
-    quickActions.setShortcutItems(AppQuickActionAssets().getShortCutItemsList());
+    quickActions
+        .setShortcutItems(AppQuickActionAssets().getShortCutItemsList());
+    quickActions.initialize((type) {
+      var pageIndex = 0;
+      if (type == QuickActionType.explore.name) {
+        pageIndex = 1;
+      } else if (type == QuickActionType.news.name) {
+        pageIndex = 2;
+      }
+      _onItemTapped(pageIndex);
+    });
   }
 
   void _onItemTapped(int index) {
