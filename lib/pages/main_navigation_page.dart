@@ -4,6 +4,8 @@ import 'package:national_calendar_hub_app/pages/explore_search_page.dart';
 import 'package:national_calendar_hub_app/pages/home_page.dart';
 import 'package:national_calendar_hub_app/pages/news_page.dart';
 import 'package:national_calendar_hub_app/pages/settings/settings_page.dart';
+import 'package:national_calendar_hub_app/utils/quick_actions_helper.dart';
+import 'package:quick_actions/quick_actions.dart';
 
 import '../color_schemes.g.dart';
 
@@ -23,6 +25,23 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
     NewsPage(),
     SettingsPage()
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    const QuickActions quickActions = QuickActions();
+    quickActions
+        .setShortcutItems(AppQuickActionAssets().getShortCutItemsList());
+    quickActions.initialize((type) {
+      var pageIndex = 0;
+      if (type == QuickActionType.explore.name) {
+        pageIndex = 1;
+      } else if (type == QuickActionType.news.name) {
+        pageIndex = 2;
+      }
+      _onItemTapped(pageIndex);
+    });
+  }
 
   void _onItemTapped(int index) {
     setState(() {
