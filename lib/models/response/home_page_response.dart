@@ -41,8 +41,11 @@ class HomePageResponseConverter {
     List<HomeListItem> homePageList = [];
     homePageList.add(HeadingItem("Today"));
     homePageList.addAll(dayItems);
-    homePageList.add(HeadingItem("This Month"));
-    homePageList.addAll(monthItems);
+
+    if (monthItems.isNotEmpty) {
+      homePageList.add(HeadingItem("This Month"));
+      homePageList.addAll(monthItems);
+    }
 
     return homePageList;
   }
