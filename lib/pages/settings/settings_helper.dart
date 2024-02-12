@@ -5,16 +5,20 @@ class SettingsListCreator {
     final List<SettingsListItem> list = [];
     list.add(SettingHeaderItem("Settings"));
     list.add(SettingsThemeItem());
-   // list.add(SettingsSwitchItem('assets/icons/settings_notification.png',"Notifications", true));
+    // list.add(SettingsSwitchItem('assets/icons/settings_notification.png',"Notifications", true));
 
-    list.add(SettingsWebLinkItem('assets/icons/settings_service.png', "Terms of Service", "https://www.nationalcalendarhub.com/termsOfLegalServices/mobile"));
-    list.add(SettingsWebLinkItem('assets/icons/settings_service.png',"Privacy Policy", "https://www.nationalcalendarhub.com/privacyPolicy/mobile"));
-    list.add(SettingsWebLinkItem('assets/icons/settings_link.png',"About Us", "https://www.nationalcalendarhub.com/aboutUs/mobile"));
+    list.add(SettingsWebItem(
+        'assets/icons/settings_service.png', "Terms of Service", "terms"));
+    list.add(SettingsWebItem(
+        'assets/icons/settings_service.png', "Privacy Policy", "privacy"));
+    list.add(
+        SettingsWebItem('assets/icons/settings_link.png', "About Us", "about"));
 
     String email = Uri.encodeComponent("info@nationalcalendarhub.com");
     String subject = Uri.encodeComponent("Contact Us - Mobile User");
     String body = Uri.encodeComponent("[Enter your message here]");
-    list.add(SettingsWebLinkItem('assets/icons/settings_contact.png',"Contact Us", "mailto:$email?subject=$subject&body=$body"));
+    list.add(SettingsEmailLinkItem('assets/icons/settings_contact.png',
+        "Contact Us", "mailto:$email?subject=$subject&body=$body"));
 
     return list;
   }

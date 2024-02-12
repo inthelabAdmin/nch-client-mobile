@@ -47,6 +47,27 @@ class SettingsThemeItem extends SettingsListItem {
   }
 }
 
+class SettingsWebItem extends SettingsListItem {
+  final String leadingAssetPath;
+  final String title;
+  final String pageType;
+
+  SettingsWebItem(this.leadingAssetPath, this.title, this.pageType);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: ImageIcon(
+          color: lightColorScheme.primary, AssetImage(leadingAssetPath)),
+      title: Text(title),
+      trailing: const Icon(Icons.chevron_right_rounded),
+      onTap: () {
+        context.go('/web/$pageType');
+      },
+    );
+  }
+}
+
 class SettingsSwitchItem extends SettingsListItem {
   final String leadingAssetPath;
   final String title;
@@ -69,12 +90,12 @@ class SettingsSwitchItem extends SettingsListItem {
   }
 }
 
-class SettingsWebLinkItem extends SettingsListItem {
+class SettingsEmailLinkItem extends SettingsListItem {
   final String leadingAssetPath;
   final String title;
   final String url;
 
-  SettingsWebLinkItem(this.leadingAssetPath, this.title, this.url);
+  SettingsEmailLinkItem(this.leadingAssetPath, this.title, this.url);
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +112,7 @@ class SettingsWebLinkItem extends SettingsListItem {
 
   _showSnackBar(BuildContext context) {
     const snackBar = SnackBar(
-      content: Text('Unable to open email app. Please try again'),
+      content: Text('Unexpected error occurred. Please try again'),
       duration: Duration(milliseconds: 1500),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -99,11 +120,11 @@ class SettingsWebLinkItem extends SettingsListItem {
 
   _launchURL(BuildContext context, String url) async {
     final uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
-    } else {
-      _showSnackBar(context);
-      FirebaseCrashlytics.instance.log("Could not launch email client");
+    if (!await launchUrl(uri)) {
+      if (context.mounted) {
+        _showSnackBar(context);
+      }
+      FirebaseCrashlytics.instance.log("Could not launch $uri");
     }
   }
 }
