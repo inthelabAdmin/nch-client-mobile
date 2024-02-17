@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:national_calendar_hub_app/utils/web_links.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class SettingsWebViewPage extends StatefulWidget {
-  const SettingsWebViewPage({Key? key, required this.pageType}) : super(key: key);
+  const SettingsWebViewPage({Key? key, required this.pageType})
+      : super(key: key);
 
   final String pageType;
 
@@ -12,24 +14,12 @@ class SettingsWebViewPage extends StatefulWidget {
 
 class _SettingsWebViewPageState extends State<SettingsWebViewPage> {
   late final WebViewController controller;
+  final WebLinksHelper _webLinksHelper = WebLinksHelper();
 
   @override
   void initState() {
     super.initState();
-    var url = "";
-    switch (widget.pageType) {
-      case 'terms':
-        url = "https://www.nationalcalendarhub.com/termsOfLegalServices/mobile";
-        break;
-      case 'privacy':
-        url = "https://www.nationalcalendarhub.com/privacyPolicy/mobile";
-        break;
-      case 'about':
-        url = "https://www.nationalcalendarhub.com/aboutUs/mobile";
-        break;
-      default:
-        url = "https://www.nationalcalendarhub.com";
-    }
+    var url = _webLinksHelper.getUrlForKey(widget.pageType);
     controller = WebViewController()
       ..loadRequest(Uri.parse(url))
       ..setJavaScriptMode(JavaScriptMode.unrestricted);
