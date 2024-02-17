@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:intl/intl.dart';
 
 class DateTimeUtil {
@@ -13,9 +15,9 @@ class DateTimeUtil {
     return newFormat.format(dateTime);
   }
 
-  String formatDisplayDate(String date) {
+  String formatDisplayDate(String date, bool isMonth) {
     final parsedDate = DateTime.parse(date);
-    final newFormat = DateFormat("MMMM d, yyyy");
+    final newFormat = isMonth? DateFormat("MMMM yyyy") : DateFormat("MMMM d, yyyy");
     return newFormat.format(parsedDate);
   }
 
