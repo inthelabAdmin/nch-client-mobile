@@ -217,8 +217,8 @@ class _DetailsPageState extends State<DetailsPage> {
                                       margin: const EdgeInsets.only(
                                           top: 20.0, bottom: 20.0),
                                       child: Text(
-                                        _dateTimeUtil
-                                            .formatDisplayDate(_data.date),
+                                        _dateTimeUtil.formatDisplayDate(
+                                            _data.date, _data.type == "month"),
                                       ))),
                               ClipRRect(
                                   borderRadius: BorderRadius.circular(8.0),

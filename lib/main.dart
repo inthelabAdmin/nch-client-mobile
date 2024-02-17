@@ -1,17 +1,19 @@
 import 'dart:ui';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:national_calendar_hub_app/pages/settings/settings_webview.dart';
 import 'package:national_calendar_hub_app/pages/details/details.dart';
 import 'package:national_calendar_hub_app/pages/main_navigation_page.dart';
 import 'package:national_calendar_hub_app/provider/theme_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'pages/settings/theme/theme_settings_page.dart';
-import 'package:firebase_core/firebase_core.dart';
+
 import 'firebase_options.dart';
+import 'pages/settings/theme/theme_settings_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -66,6 +68,17 @@ class MyApp extends StatelessWidget {
         path: '/',
         builder: (context, state) => const MainNavigationPage(),
         routes: [
+          GoRoute(
+              path: 'web/:pageType',
+              builder: (context, state) => SettingsWebViewPage(
+                  pageType: state.pathParameters['pageType'].toString()),
+              pageBuilder: (context, state) =>
+                  buildPageWithDefaultTransition<void>(
+                      state: state,
+                      context: context,
+                      child: SettingsWebViewPage(
+                          pageType:
+                              state.pathParameters['pageType'].toString()))),
           GoRoute(
               path: 'details/:id',
               builder: (context, state) =>
